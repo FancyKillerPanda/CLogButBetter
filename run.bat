@@ -1,6 +1,5 @@
 @echo off
-
-rem  ===== Date Created: 17 January, 2020 ===== 
+rem  ===== Date Created: 14 July, 2020 ===== 
 
 pushd bin
 CLogButBetter.exe %*
