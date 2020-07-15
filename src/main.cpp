@@ -2,10 +2,14 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "common.hpp"
+#include "button.hpp"
+
 #define WINDOW_WIDTH 960
 #define WINDOW_HEIGHT 540
 
-#define SET_ORIGIN_CENTER(obj) obj.setOrigin(obj.getGlobalBounds().width / 2, obj.getGlobalBounds().height / 2)
+#define HOME_PATH_BUTTON_WIDTH WINDOW_WIDTH * 20 / 100
+#define HOME_PATH_BUTTON_HEIGHT WINDOW_HEIGHT * 10 / 100
 
 int main()
 {
@@ -21,6 +25,10 @@ int main()
 	titleText.setStyle(sf::Text::Bold | sf::Text::Underlined);
 	titleText.setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT * 12 / 100);
 
+	Button viewCadetsButton { font, "View Cadets",
+							  sf::Vector2i { WINDOW_WIDTH * 30 / 100, WINDOW_HEIGHT * 40 / 100 },
+							  sf::Vector2i { HOME_PATH_BUTTON_WIDTH, HOME_PATH_BUTTON_HEIGHT } };
+	
 	while (window.isOpen())
 	{
 		while (window.pollEvent(event))
@@ -41,7 +49,8 @@ int main()
 		window.clear(sf::Color { 153, 216, 233, 255 });
 
 		window.draw(titleText);
-			
+		viewCadetsButton.draw(window);
+		
 		window.display();
 	}
 }
