@@ -28,7 +28,7 @@ int main()
 	Button viewCadetsButton { font, "View Cadets",
 							  sf::Vector2i { WINDOW_WIDTH * 30 / 100, WINDOW_HEIGHT * 40 / 100 },
 							  sf::Vector2i { HOME_PATH_BUTTON_WIDTH, HOME_PATH_BUTTON_HEIGHT } };
-	
+
 	while (window.isOpen())
 	{
 		while (window.pollEvent(event))
@@ -38,6 +38,23 @@ int main()
 			case sf::Event::Closed:
 			{
 				window.close();
+			} break;
+
+			case sf::Event::MouseMoved:
+			{
+				sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+				viewCadetsButton.handleMouseMove(mousePos);
+			} break;
+
+			case sf::Event::MouseButtonPressed:
+			{
+				sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+				viewCadetsButton.handleMouseDown(mousePos);
+			} break;
+
+			case sf::Event::MouseButtonReleased:
+			{
+				viewCadetsButton.setActive(false);
 			} break;
 
 			default:

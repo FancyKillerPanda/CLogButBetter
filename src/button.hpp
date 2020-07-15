@@ -9,14 +9,24 @@
 class Button
 {
 private:
+	bool isHot = false;
+	bool isActive = false;
+	
 	std::string text;
 	sf::Text drawableText;
+	sf::RectangleShape backgroundShape;
 	sf::Vector2i centrePosition;
 	sf::Vector2i size;
 	
 public:
 	Button(const sf::Font& font, std::string text, sf::Vector2i centrePosition, sf::Vector2i size);
+
+	void handleMouseMove(sf::Vector2i& mousePos);
+	void handleMouseDown(sf::Vector2i& mousePos);
 	void draw(sf::RenderTarget& target);
+
+	void setActive(bool value);
+	void setHot(bool value);
 };
 
 #endif
