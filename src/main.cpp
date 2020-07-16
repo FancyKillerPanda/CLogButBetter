@@ -14,7 +14,7 @@
 // Will be used to access buttons in the vector. Rather than using a
 // plain index, these names help to understand which button is being
 // accessed.
-enum ButtonIndex
+enum HomePageButtonIndex
 {
 	VIEW_CADETS_BUTTON,
 	VIEW_SQUADRON_BUTTON,
@@ -24,14 +24,14 @@ enum ButtonIndex
 	MANAGE_BUTTON,
 
 	// Keep last
-	BUTTON_COUNT,
+	HOME_PAGE_BUTTON_COUNT,
 };
 
-std::vector<Button> initAllButtons(const sf::Font& font)
+std::vector<Button> initHomePageButtons(const sf::Font& font)
 {
 	// NOTE(fkp): Volatile, initilise in order of ButtonIndex
 	std::vector<Button> result;
-	result.reserve(BUTTON_COUNT);
+	result.reserve(HOME_PAGE_BUTTON_COUNT);
 	sf::Vector2i buttonSize { HOME_PATH_BUTTON_WIDTH, HOME_PATH_BUTTON_HEIGHT };
 
 	result.emplace_back(font, "View Cadets",
@@ -56,8 +56,20 @@ std::vector<Button> initAllButtons(const sf::Font& font)
 	return result;
 }
 
+enum class ProgramState
+{
+	HomePage,
+	ViewDatabasePage,
+	IssuesPage,
+	ExchangesPage,
+	ReturnsPage,
+	ManagePage,
+};
+
 int main()
 {
+	ProgramState programState = ProgramState::HomePage;
+	
 	sf::RenderWindow window { sf::VideoMode { WINDOW_WIDTH, WINDOW_HEIGHT }, "CLogButBetter" };
 	sf::Event event;
 
@@ -70,7 +82,7 @@ int main()
 	titleText.setStyle(sf::Text::Bold | sf::Text::Underlined);
 	titleText.setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT * 12 / 100);
 
-	std::vector<Button> buttons = initAllButtons(font);
+	std::vector<Button> homePageButtons = initHomePageButtons(font);
 
 	while (window.isOpen())
 	{
@@ -87,9 +99,19 @@ int main()
 			{
 				sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 
-				for (Button& button : buttons)
+				switch (programState)
 				{
-					button.handleMouseMove(mousePos);
+				case ProgramState::HomePage:
+				{
+					for (Button& button : homePageButtons)
+					{
+						button.handleMouseMove(mousePos);
+					}
+				} break;
+
+				default:
+				{
+				} break;
 				}
 			} break;
 
@@ -97,20 +119,40 @@ int main()
 			{
 				sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 				
-				for (Button& button : buttons)
+				switch (programState)
 				{
-					button.handleMouseDown(mousePos);
+				case ProgramState::HomePage:
+				{
+					for (Button& button : homePageButtons)
+					{
+						button.handleMouseDown(mousePos);
+					}
+				} break;
+				
+				default:
+				{
+				} break;
 				}
 			} break;
 
 			case sf::Event::MouseButtonReleased:
 			{
-				for (Button& button : buttons)
+				switch (programState)
 				{
-					if (button.handleMouseUp())
+				case ProgramState::HomePage:
+				{
+					for (Button& button : homePageButtons)
 					{
-						printf("Button clicked.\n");
+						if (button.handleMouseUp())
+						{
+							printf("Button clicked.\n");
+						}
 					}
+				} break;
+
+				default:
+				{
+				} break;
 				}
 			} break;
 
@@ -121,11 +163,22 @@ int main()
 		}
 		
 		window.clear(sf::Color { 153, 216, 233, 255 });
-		window.draw(titleText);
 
-		for (Button& button : buttons)
+		switch (programState)
 		{
-			button.draw(window);
+		case ProgramState::HomePage:
+		{
+			window.draw(titleText);
+
+			for (Button& button : homePageButtons)
+			{
+				button.draw(window);
+			}
+		} break;
+
+		default:
+		{
+		} break;
 		}
 		
 		window.display();
