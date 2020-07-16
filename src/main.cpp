@@ -141,11 +141,42 @@ int main()
 				{
 				case ProgramState::HomePage:
 				{
-					for (Button& button : homePageButtons)
+					for (unsigned int i = 0; i < HOME_PAGE_BUTTON_COUNT; i++)
 					{
-						if (button.handleMouseUp())
+						if (homePageButtons[i].handleMouseUp())
 						{
-							printf("Button clicked.\n");
+							switch (i)
+							{
+							case VIEW_CADETS_BUTTON:
+							{
+								programState = ProgramState::ViewDatabasePage;
+							} break;
+									
+							case VIEW_SQUADRON_BUTTON:
+							{
+								programState = ProgramState::ViewDatabasePage;
+							} break;
+									
+							case ISSUES_BUTTON:
+							{
+								programState = ProgramState::IssuesPage;
+							} break;
+									
+							case EXCHANGES_BUTTON:
+							{
+								programState = ProgramState::ExchangesPage;
+							} break;
+									
+							case RETURNS_BUTTON:
+							{
+								programState = ProgramState::ReturnsPage;
+							} break;
+									
+							case MANAGE_BUTTON:
+							{
+								programState = ProgramState::ManagePage;
+							} break;
+							}
 						}
 					}
 				} break;
@@ -174,6 +205,31 @@ int main()
 			{
 				button.draw(window);
 			}
+		} break;
+
+		case ProgramState::ViewDatabasePage:
+		{
+			window.draw(titleText);
+		} break;
+
+		case ProgramState::IssuesPage:
+		{
+			window.draw(titleText);
+		} break;
+
+		case ProgramState::ExchangesPage:
+		{
+			window.draw(titleText);
+		} break;
+
+		case ProgramState::ReturnsPage:
+		{
+			window.draw(titleText);
+		} break;
+
+		case ProgramState::ManagePage:
+		{
+			window.draw(titleText);
 		} break;
 
 		default:
