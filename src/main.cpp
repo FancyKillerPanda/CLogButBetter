@@ -11,6 +11,51 @@
 #define HOME_PATH_BUTTON_WIDTH WINDOW_WIDTH * 20 / 100
 #define HOME_PATH_BUTTON_HEIGHT WINDOW_HEIGHT * 10 / 100
 
+// Will be used to access buttons in the vector. Rather than using a
+// plain index, these names help to understand which button is being
+// accessed.
+enum ButtonIndex
+{
+	VIEW_CADETS_BUTTON,
+	VIEW_SQUADRON_BUTTON,
+	ISSUES_BUTTON,
+	EXCHANGES_BUTTON,
+	RETURNS_BUTTON,
+	MANAGE_BUTTON,
+
+	// Keep last
+	BUTTON_COUNT,
+};
+
+std::vector<Button> initAllButtons(const sf::Font& font)
+{
+	// NOTE(fkp): Volatile, initilise in order of ButtonIndex
+	std::vector<Button> result;
+	result.reserve(BUTTON_COUNT);
+	sf::Vector2i buttonSize { HOME_PATH_BUTTON_WIDTH, HOME_PATH_BUTTON_HEIGHT };
+
+	result.emplace_back(font, "View Cadets",
+						sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 40 / 100 },
+						buttonSize);
+	result.emplace_back(font, "View Squadron",
+						sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 60 / 100 },
+						buttonSize);
+	result.emplace_back(font, "Issues",
+						sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 30 / 100 },
+						buttonSize);
+	result.emplace_back(font, "Exchanges",
+						sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 50 / 100 },
+						buttonSize);
+	result.emplace_back(font, "Returns",
+						sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 70 / 100 },
+						buttonSize);
+	result.emplace_back(font, "Manage",
+						sf::Vector2i { WINDOW_WIDTH * 80 / 100, WINDOW_HEIGHT * 50 / 100 },
+						buttonSize);
+
+	return result;
+}
+
 int main()
 {
 	sf::RenderWindow window { sf::VideoMode { WINDOW_WIDTH, WINDOW_HEIGHT }, "CLogButBetter" };
@@ -25,9 +70,7 @@ int main()
 	titleText.setStyle(sf::Text::Bold | sf::Text::Underlined);
 	titleText.setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT * 12 / 100);
 
-	Button viewCadetsButton { font, "View Cadets",
-							  sf::Vector2i { WINDOW_WIDTH * 30 / 100, WINDOW_HEIGHT * 40 / 100 },
-							  sf::Vector2i { HOME_PATH_BUTTON_WIDTH, HOME_PATH_BUTTON_HEIGHT } };
+	std::vector<Button> buttons = initAllButtons(font);
 
 	while (window.isOpen())
 	{
@@ -43,20 +86,31 @@ int main()
 			case sf::Event::MouseMoved:
 			{
 				sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-				viewCadetsButton.handleMouseMove(mousePos);
+
+				for (Button& button : buttons)
+				{
+					button.handleMouseMove(mousePos);
+				}
 			} break;
 
 			case sf::Event::MouseButtonPressed:
 			{
 				sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-				viewCadetsButton.handleMouseDown(mousePos);
+				
+				for (Button& button : buttons)
+				{
+					button.handleMouseDown(mousePos);
+				}
 			} break;
 
 			case sf::Event::MouseButtonReleased:
 			{
-				if (viewCadetsButton.handleMouseUp())
+				for (Button& button : buttons)
 				{
-					printf("Button clicked.\n");
+					if (button.handleMouseUp())
+					{
+						printf("Button clicked.\n");
+					}
 				}
 			} break;
 
@@ -67,9 +121,12 @@ int main()
 		}
 		
 		window.clear(sf::Color { 153, 216, 233, 255 });
-
 		window.draw(titleText);
-		viewCadetsButton.draw(window);
+
+		for (Button& button : buttons)
+		{
+			button.draw(window);
+		}
 		
 		window.display();
 	}
