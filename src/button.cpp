@@ -55,6 +55,14 @@ void Button::handleMouseDown(sf::Vector2i& mousePos)
 	}
 }
 
+bool Button::handleMouseUp()
+{
+	bool wasActive = isActive;
+	setActive(false);
+	
+	return wasActive;
+}
+
 void Button::draw(sf::RenderTarget& target)
 {
 	target.draw(backgroundShape);

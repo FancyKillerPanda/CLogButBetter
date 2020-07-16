@@ -23,6 +23,7 @@ public:
 
 	void handleMouseMove(sf::Vector2i& mousePos);
 	void handleMouseDown(sf::Vector2i& mousePos);
+	bool handleMouseUp();
 	void draw(sf::RenderTarget& target);
 
 	void setActive(bool value);

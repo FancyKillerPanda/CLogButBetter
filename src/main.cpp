@@ -54,7 +54,10 @@ int main()
 
 			case sf::Event::MouseButtonReleased:
 			{
-				viewCadetsButton.setActive(false);
+				if (viewCadetsButton.handleMouseUp())
+				{
+					printf("Button clicked.\n");
+				}
 			} break;
 
 			default:
