@@ -24,6 +24,20 @@ enum HomePageButtonIndex
 	HOME_PAGE_BUTTON_COUNT,
 };
 
+enum ManagePageButtonIndex
+{
+	ADD_CADET_BUTTON,
+	REMOVE_CADET_BUTTON,
+	ADD_ITEM_BUTTON,
+	REMOVE_ITEM_BUTTON,
+	CREATE_BACKUP_BUTTON,
+	RESTORE_BACKUP_BUTTON,
+	GET_SIZES_BUTTON,
+	
+	// Keep last
+	MANAGE_PAGE_BUTTON_COUNT,
+};
+
 enum class ProgramState
 {
 	HomePage,
@@ -42,6 +56,7 @@ private:
 
 	sf::Text titleText;
 	std::vector<Button> homePageButtons;
+	std::vector<Button> managePageButtons;
 	
 public:
 	CLogButBetter();	
@@ -51,6 +66,7 @@ public:
 
 private:
 	void initHomePageButtons();
+	void initManagePageButtons();
 };
 
 

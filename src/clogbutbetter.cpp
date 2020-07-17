@@ -13,6 +13,7 @@ CLogButBetter::CLogButBetter()
 	titleText.setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT * 12 / 100);
 
 	initHomePageButtons();
+	initManagePageButtons();
 }
 
 void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& event)
@@ -37,6 +38,14 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 				button.handleMouseMove(mousePos);
 			}
 		} break;
+		
+		case ProgramState::ManagePage:
+		{
+			for (Button& button : managePageButtons)
+			{
+				button.handleMouseMove(mousePos);
+			}
+		} break;
 
 		default:
 		{
@@ -53,6 +62,14 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 		case ProgramState::HomePage:
 		{
 			for (Button& button : homePageButtons)
+			{
+				button.handleMouseDown(mousePos);
+			}
+		} break;
+				
+		case ProgramState::ManagePage:
+		{
+			for (Button& button : managePageButtons)
 			{
 				button.handleMouseDown(mousePos);
 			}
@@ -159,6 +176,11 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 	case ProgramState::ManagePage:
 	{
 		target.draw(titleText);
+
+		for (Button& button : managePageButtons)
+		{
+			button.draw(target);
+		}
 	} break;
 
 	default:
@@ -195,4 +217,36 @@ void CLogButBetter::initHomePageButtons()
 					 buttonSize);
 	
 #undef HPB
+}
+
+void CLogButBetter::initManagePageButtons()
+{
+#define MPB managePageButtons
+
+	MPB.reserve(MANAGE_PAGE_BUTTON_COUNT);
+	sf::Vector2i buttonSize { MANAGE_PAGE_BUTTON_WIDTH, MANAGE_PAGE_BUTTON_HEIGHT };
+
+	MPB.emplace_back(font, "Add Cadet",
+					 sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 40 / 100 },
+					 buttonSize);
+	MPB.emplace_back(font, "Remove Cadet",
+					 sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 60 / 100 },
+					 buttonSize);
+	MPB.emplace_back(font, "Add Item",
+					 sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 40 / 100 },
+					 buttonSize);
+	MPB.emplace_back(font, "Remove Item",
+					 sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 60 / 100 },
+					 buttonSize);
+	MPB.emplace_back(font, "Create Backup",
+					 sf::Vector2i { WINDOW_WIDTH * 80 / 100, WINDOW_HEIGHT * 40 / 100 },
+					 buttonSize);
+	MPB.emplace_back(font, "Restore Backup",
+					 sf::Vector2i { WINDOW_WIDTH * 80 / 100, WINDOW_HEIGHT * 60 / 100 },
+					 buttonSize);
+	MPB.emplace_back(font, "Get Sizes",
+					 sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 80 / 100 },
+					 buttonSize);
+		
+#undef MPB
 }
