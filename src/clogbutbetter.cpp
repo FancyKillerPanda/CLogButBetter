@@ -14,6 +14,15 @@ CLogButBetter::CLogButBetter()
 
 	initHomePageButtons();
 	initManagePageButtons();
+
+	backButton = new Button(font, "<--",
+							sf::Vector2i { WINDOW_WIDTH * 5 / 100, WINDOW_HEIGHT * 5 / 100},
+							sf::Vector2i { WINDOW_WIDTH * 5 / 100, WINDOW_HEIGHT * 3 / 100});
+}
+
+CLogButBetter::~CLogButBetter()
+{
+	delete backButton;
 }
 
 void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& event)
@@ -51,6 +60,11 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 		{
 		} break;
 		}
+		
+		if (programState != ProgramState::HomePage)
+		{
+			backButton->handleMouseMove(mousePos);
+		}
 	} break;
 
 	case sf::Event::MouseButtonPressed:
@@ -78,6 +92,11 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 		default:
 		{
 		} break;
+		}
+
+		if (programState != ProgramState::HomePage)
+		{
+			backButton->handleMouseDown(mousePos);
 		}
 	} break;
 
@@ -130,6 +149,14 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 		default:
 		{
 		} break;
+		}
+
+		if (programState != ProgramState::HomePage)
+		{
+			if (backButton->handleMouseUp())
+			{
+				programState = ProgramState::HomePage;
+			}
 		}
 	} break;
 
@@ -186,6 +213,11 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 	default:
 	{
 	} break;
+	}
+
+	if (programState != ProgramState::HomePage)
+	{
+		backButton->draw(target);
 	}
 }
 

@@ -55,11 +55,14 @@ private:
 	sf::Font font;
 
 	sf::Text titleText;
+
+	Button* backButton = nullptr; // Needs to be pointer for delayed initialisation
 	std::vector<Button> homePageButtons;
 	std::vector<Button> managePageButtons;
 	
 public:
-	CLogButBetter();	
+	CLogButBetter();
+	~CLogButBetter();
 	
 	void handleProgramEvent(sf::RenderWindow& window, sf::Event& event);
 	void drawProgram(sf::RenderTarget& target);
