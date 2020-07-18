@@ -11,6 +11,6 @@
 #define MANAGE_PAGE_BUTTON_WIDTH WINDOW_WIDTH * 20 / 100
 #define MANAGE_PAGE_BUTTON_HEIGHT WINDOW_HEIGHT * 10 / 100
 
-#define SET_ORIGIN_CENTER(obj) obj.setOrigin(obj.getGlobalBounds().width / 2, obj.getGlobalBounds().height / 2)
+#define SET_ORIGIN_CENTER(obj) obj.setOrigin(obj.getGlobalBounds().left + (obj.getGlobalBounds().width / 2), obj.getGlobalBounds().top + (obj.getGlobalBounds().height / 2))
 
 #endif
