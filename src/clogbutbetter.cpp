@@ -1,5 +1,8 @@
 //  ===== Date Created: 17 July, 2020 ===== 
 
+#include <fstream>
+#include <string>
+
 #include "clogbutbetter.hpp"
 
 CLogButBetter::CLogButBetter()
@@ -281,4 +284,71 @@ void CLogButBetter::initManagePageButtons()
 					 sf::Vector2i { WINDOW_WIDTH * 30 / 100, WINDOW_HEIGHT * 10 / 100 });
 		
 #undef MPB
+}
+
+#define READ_STRING_UNTIL_COMMA(name)			\
+	std::getline(file, name, ',');
+
+#define READ_UINT_UNTIL_COMMA(name, nameStr)	\
+	std::string nameStr;						\
+	READ_STRING_UNTIL_COMMA(nameStr);			\
+	name = std::stoul(nameStr);
+
+// NOTE(fkp): Volatile - must stay in sync with writeCadetsToFile()
+void CLogButBetter::readCadetsFromFile()
+{
+	std::string line;
+	std::ifstream file { cadetDatabaseFilepath };
+
+	if (!file)
+	{
+		printf("Error: Failed to open cadet database file for reading.\n");
+		return;
+	}
+
+	cadetDatabase.clear();
+	
+	while (std::getline(file, line))
+	{
+		cadetDatabase.emplace_back();
+		
+		unsigned int cadetServiceNumber;
+		READ_UINT_UNTIL_COMMA(cadetServiceNumber, cadetServiceNumberStr);
+		cadetDatabase.back().serviceNumber = cadetServiceNumber;
+
+		std::string cadetRank;
+		READ_STRING_UNTIL_COMMA(cadetRank);
+		cadetDatabase.back().rankAbbrev = cadetRank;
+		
+		std::string cadetFirstName;
+		READ_STRING_UNTIL_COMMA(cadetFirstName);
+		cadetDatabase.back().firstName = cadetFirstName;
+		
+		std::string cadetLastName;
+		READ_STRING_UNTIL_COMMA(cadetLastName);
+		cadetDatabase.back().lastName = cadetLastName;
+	}
+}
+
+// NOTE(fkp): Volatile - must stay in sync with readCadetsFromFile()
+void CLogButBetter::writeCadetsToFile()
+{
+	std::string line;
+	std::ofstream file { cadetDatabaseFilepath };
+
+	if (!file)
+	{
+		printf("Error: Failed to open cadet database file for writing.\n");
+		return;
+	}
+
+	for (Cadet& cadet : cadetDatabase)
+	{
+		file << cadet.serviceNumber << ",";
+		file << cadet.rankAbbrev << ",";
+		file << cadet.firstName << ",";
+		file << cadet.lastName << ",";
+
+		file << "\n";
+	}
 }

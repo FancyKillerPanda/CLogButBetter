@@ -7,6 +7,7 @@
 
 #include "common.hpp"
 #include "button.hpp"
+#include "cadet.hpp"
 
 // Will be used to access buttons in the vector. Rather than using a
 // plain index, these names help to understand which button is being
@@ -59,6 +60,9 @@ private:
 	Button* backButton = nullptr; // Needs to be pointer for delayed initialisation
 	std::vector<Button> homePageButtons;
 	std::vector<Button> managePageButtons;
+
+	std::string cadetDatabaseFilepath = "res/cadets.csv";
+	std::vector<Cadet> cadetDatabase;
 	
 public:
 	CLogButBetter();
@@ -70,6 +74,9 @@ public:
 private:
 	void initHomePageButtons();
 	void initManagePageButtons();
+
+	void writeCadetsToFile();
+	void readCadetsFromFile();
 };
 
 
