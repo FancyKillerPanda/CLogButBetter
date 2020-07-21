@@ -53,8 +53,8 @@ class CLogButBetter
 {
 private:
 	ProgramState programState = ProgramState::HomePage;
-	sf::Font font;
 
+	sf::Font font;
 	sf::Text titleText;
 
 	Button* backButton = nullptr; // Needs to be pointer for delayed initialisation

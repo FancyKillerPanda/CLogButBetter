@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <string>
+#include <sstream>
 
 #include "clogbutbetter.hpp"
 
@@ -15,6 +16,8 @@ CLogButBetter::CLogButBetter()
 	titleText.setStyle(sf::Text::Bold | sf::Text::Underlined);
 	titleText.setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT * 12 / 100);
 
+	readCadetsFromFile();
+	
 	initHomePageButtons();
 	initManagePageButtons();
 
@@ -185,7 +188,48 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 
 	case ProgramState::ViewDatabasePage:
 	{
+		// Values for ease of drawing
+		constexpr unsigned int tableX = WINDOW_WIDTH * 5 / 100;
+		constexpr unsigned int tableY = WINDOW_HEIGHT * 20 / 100;
+		constexpr unsigned int tableWidth = WINDOW_WIDTH * 90 / 100;
+		constexpr unsigned int tableHeight = WINDOW_HEIGHT * 75 / 100;
+
+		// NOTE(fkp): The +5 is just to add some padding
+		constexpr unsigned int serviceNumberX = tableX + 5;
+		constexpr unsigned int serviceNumberWidth = tableWidth * 15 / 100;
+		constexpr unsigned int rankX = serviceNumberX + serviceNumberWidth + 5;
+		constexpr unsigned int rankWidth = tableWidth * 10 / 100;
+		constexpr unsigned int nameX = rankX + rankWidth + 5;
+		constexpr unsigned int nameWidth = tableWidth * 25 / 100;
+		
 		target.draw(titleText);
+		
+		sf::RectangleShape background { sf::Vector2f { WINDOW_WIDTH * 90 / 100, WINDOW_HEIGHT * 75 / 100 } };
+		background.setPosition(WINDOW_WIDTH * 5 / 100, WINDOW_HEIGHT * 20 / 100);
+		background.setFillColor(sf::Color::White);
+
+		target.draw(background);
+		
+		unsigned int currentY = tableY;
+		sf::Text entryText { "", font, 20 };
+		entryText.setFillColor(sf::Color::Black);
+
+		for (Cadet& cadet : cadetDatabase)
+		{
+			entryText.setString(std::to_string(cadet.serviceNumber));
+			entryText.setPosition((float) serviceNumberX, (float) currentY);
+			target.draw(entryText);
+
+			entryText.setString(cadet.rankAbbrev);
+			entryText.setPosition((float) rankX, (float) currentY);
+			target.draw(entryText);
+
+			entryText.setString(cadet.firstName + " " + cadet.lastName);
+			entryText.setPosition((float) nameX, (float) currentY);
+			target.draw(entryText);
+
+			currentY += entryText.getCharacterSize() + 2;
+		}
 	} break;
 
 	case ProgramState::IssuesPage:
@@ -287,7 +331,7 @@ void CLogButBetter::initManagePageButtons()
 }
 
 #define READ_STRING_UNTIL_COMMA(name)			\
-	std::getline(file, name, ',');
+	std::getline(line, name, ',');
 
 #define READ_UINT_UNTIL_COMMA(name, nameStr)	\
 	std::string nameStr;						\
@@ -297,7 +341,7 @@ void CLogButBetter::initManagePageButtons()
 // NOTE(fkp): Volatile - must stay in sync with writeCadetsToFile()
 void CLogButBetter::readCadetsFromFile()
 {
-	std::string line;
+	std::string lineStr;
 	std::ifstream file { cadetDatabaseFilepath };
 
 	if (!file)
@@ -308,8 +352,9 @@ void CLogButBetter::readCadetsFromFile()
 
 	cadetDatabase.clear();
 	
-	while (std::getline(file, line))
+	while (std::getline(file, lineStr))
 	{
+		std::stringstream line { lineStr };
 		cadetDatabase.emplace_back();
 		
 		unsigned int cadetServiceNumber;
