@@ -47,6 +47,7 @@ enum class ProgramState
 	ExchangesPage,
 	ReturnsPage,
 	ManagePage,
+	LoginPage,
 };
 
 class CLogButBetter
@@ -56,13 +57,18 @@ private:
 
 	sf::Font font;
 	sf::Text titleText;
+	sf::Text usernameText;
+	sf::Text passwordText;
 
 	Button* backButton = nullptr; // Needs to be pointer for delayed initialisation
+	Button* loginButton = nullptr;
 	std::vector<Button> homePageButtons;
 	std::vector<Button> managePageButtons;
 
 	std::string cadetDatabaseFilepath = "res/cadets.csv";
 	std::vector<Cadet> cadetDatabase;
+
+	bool hasLoggedIn = false;
 	
 public:
 	CLogButBetter();
@@ -72,8 +78,9 @@ public:
 	void drawProgram(sf::RenderTarget& target);
 
 private:
-	void initHomePageButtons();
-	void initManagePageButtons();
+	void initHomePage();
+	void initManagePage();
+	void initLoginPage();
 
 	void writeCadetsToFile();
 	void readCadetsFromFile();

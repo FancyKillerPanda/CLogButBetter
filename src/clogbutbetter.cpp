@@ -18,8 +18,9 @@ CLogButBetter::CLogButBetter()
 
 	readCadetsFromFile();
 	
-	initHomePageButtons();
-	initManagePageButtons();
+	initHomePage();
+	initManagePage();
+	initLoginPage();
 
 	backButton = new Button(font, "<--",
 							sf::Vector2i { WINDOW_WIDTH * 5 / 100, WINDOW_HEIGHT * 5 / 100},
@@ -62,6 +63,11 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			}
 		} break;
 
+		case ProgramState::LoginPage:
+		{
+			loginButton->handleMouseMove(mousePos);
+		} break;
+
 		default:
 		{
 		} break;
@@ -95,6 +101,11 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			}
 		} break;
 				
+		case ProgramState::LoginPage:
+		{
+			loginButton->handleMouseDown(mousePos);
+		} break;
+
 		default:
 		{
 		} break;
@@ -145,9 +156,18 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 									
 					case MANAGE_BUTTON:
 					{
-						programState = ProgramState::ManagePage;
+						if (hasLoggedIn)
+						{
+							programState = ProgramState::ManagePage;
+						}
+						else
+						{
+							programState = ProgramState::LoginPage;
+						}
 					} break;
 					}
+
+					homePageButtons[i].setActive(false);
 				}
 			}
 		} break;
@@ -291,6 +311,13 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 		}
 	} break;
 
+	case ProgramState::LoginPage:
+	{
+		target.draw(usernameText);
+		target.draw(passwordText);
+		loginButton->draw(target);
+	} break;
+
 	default:
 	{
 	} break;
@@ -302,7 +329,7 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 	}
 }
 
-void CLogButBetter::initHomePageButtons()
+void CLogButBetter::initHomePage()
 {
 #define HPB homePageButtons
 	
@@ -332,7 +359,7 @@ void CLogButBetter::initHomePageButtons()
 #undef HPB
 }
 
-void CLogButBetter::initManagePageButtons()
+void CLogButBetter::initManagePage()
 {
 #define MPB managePageButtons
 
@@ -362,6 +389,23 @@ void CLogButBetter::initManagePageButtons()
 					 sf::Vector2i { WINDOW_WIDTH * 30 / 100, WINDOW_HEIGHT * 10 / 100 });
 		
 #undef MPB
+}
+
+void CLogButBetter::initLoginPage()
+{
+	usernameText = sf::Text { "Username:", font, 24 };
+	usernameText.setFillColor(sf::Color::Black);
+	usernameText.setPosition((WINDOW_WIDTH * 50 / 100) - (usernameText.getGlobalBounds().width / 2),
+							 (WINDOW_HEIGHT * 30 / 100) - (usernameText.getGlobalBounds().height / 2));
+	
+	passwordText = sf::Text { "Password:", font, 24 };
+	passwordText.setFillColor(sf::Color::Black);
+	passwordText.setPosition((WINDOW_WIDTH * 50 / 100) - (passwordText.getGlobalBounds().width / 2),
+							 (WINDOW_HEIGHT * 50 / 100) - (passwordText.getGlobalBounds().height / 2));
+	
+	loginButton = new Button(font, "Login",
+							 sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 70 / 100},
+							 sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 5 / 100 });
 }
 
 #define READ_STRING_UNTIL_COMMA(name)			\
