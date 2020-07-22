@@ -201,19 +201,40 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 		constexpr unsigned int rankWidth = tableWidth * 10 / 100;
 		constexpr unsigned int nameX = rankX + rankWidth + 5;
 		constexpr unsigned int nameWidth = tableWidth * 25 / 100;
-		
+
 		target.draw(titleText);
 		
 		sf::RectangleShape background { sf::Vector2f { WINDOW_WIDTH * 90 / 100, WINDOW_HEIGHT * 75 / 100 } };
 		background.setPosition(WINDOW_WIDTH * 5 / 100, WINDOW_HEIGHT * 20 / 100);
 		background.setFillColor(sf::Color::White);
-
 		target.draw(background);
-		
+
+		sf::RectangleShape horizontalLine { sf::Vector2f { tableWidth, 1 }};
+		horizontalLine.setFillColor(sf::Color::Black);
+		sf::RectangleShape verticalLine { sf::Vector2f { 1, tableHeight }};
+		verticalLine.setFillColor(sf::Color::Black);
+
 		unsigned int currentY = tableY;
 		sf::Text entryText { "", font, 20 };
 		entryText.setFillColor(sf::Color::Black);
 
+		// Header row
+		entryText.setStyle(sf::Text::Bold);
+		entryText.setString("Service #");
+		entryText.setPosition((float) serviceNumberX, (float) currentY);
+		target.draw(entryText);
+
+		entryText.setString("Rank");
+		entryText.setPosition((float) rankX, (float) currentY);
+		target.draw(entryText);
+
+		entryText.setString("Name");
+		entryText.setPosition((float) nameX, (float) currentY);
+		target.draw(entryText);
+
+		currentY += entryText.getCharacterSize() + 3;
+		entryText.setStyle(sf::Text::Regular);
+		
 		for (Cadet& cadet : cadetDatabase)
 		{
 			entryText.setString(std::to_string(cadet.serviceNumber));
@@ -229,6 +250,19 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 			target.draw(entryText);
 
 			currentY += entryText.getCharacterSize() + 2;
+		}
+
+		// Draws the grid
+		verticalLine.setPosition(rankX - 5, tableY);
+		target.draw(verticalLine);
+		verticalLine.setPosition(nameX - 5, tableY);
+		target.draw(verticalLine);
+
+		// NOTE(fkp): +3 skips the header row, +2 for each row after
+		for (int y = tableY + entryText.getCharacterSize() + 3; y < tableY + tableWidth; y += entryText.getCharacterSize() + 2)
+		{
+			horizontalLine.setPosition(tableX, (float) y);
+			target.draw(horizontalLine);			
 		}
 	} break;
 
