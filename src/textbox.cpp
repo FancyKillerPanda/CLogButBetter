@@ -10,6 +10,7 @@ TextBox::TextBox(const sf::Font& font, sf::Vector2i centrePosition, sf::Vector2i
 	SET_ORIGIN_CENTER(backgroundShape);
 	backgroundShape.setPosition((sf::Vector2f) centrePosition);
 	backgroundShape.setFillColor(sf::Color::White);
+	backgroundShape.setOutlineColor(sf::Color::Black);
 
 	drawableText.setFillColor(sf::Color::Black);
 	drawableText.setPosition(backgroundShape.getGlobalBounds().left + 2, backgroundShape.getGlobalBounds().top);
@@ -18,7 +19,7 @@ TextBox::TextBox(const sf::Font& font, sf::Vector2i centrePosition, sf::Vector2i
 void TextBox::handleMouseUp(sf::Vector2i& mousePos)
 {
 	bool mouseOverTextBox = backgroundShape.getGlobalBounds().contains((sf::Vector2f) mousePos);
-	isActive = mouseOverTextBox;
+	setActive(mouseOverTextBox);
 }
 
 void TextBox::handleTextInput(sf::Event& event)
@@ -56,4 +57,13 @@ void TextBox::draw(sf::RenderTarget& target)
 void TextBox::setActive(bool value)
 {
 	isActive = value;
+
+	if (isActive)
+	{
+		backgroundShape.setOutlineThickness(1);
+	}
+	else
+	{
+		backgroundShape.setOutlineThickness(0);
+	}
 }
