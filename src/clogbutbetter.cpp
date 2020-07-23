@@ -178,6 +178,14 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			}
 		} break;
 
+		case ProgramState::ManagePage:
+		{
+			for (Button& button : managePageButtons)
+			{
+				button.handleMouseUp();
+			}
+		} break;
+		
 		case ProgramState::LoginPage:
 		{
 			usernameTextbox->handleMouseUp(mousePos);
