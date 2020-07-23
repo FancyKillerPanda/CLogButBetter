@@ -30,6 +30,10 @@ CLogButBetter::CLogButBetter()
 CLogButBetter::~CLogButBetter()
 {
 	delete backButton;
+	
+	delete loginButton;
+	delete usernameTextbox;
+	delete passwordTextbox;
 }
 
 void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& event)
@@ -119,6 +123,8 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 
 	case sf::Event::MouseButtonReleased:
 	{
+		sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+		
 		switch (programState)
 		{
 		case ProgramState::HomePage:
@@ -172,6 +178,17 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			}
 		} break;
 
+		case ProgramState::LoginPage:
+		{
+			usernameTextbox->handleMouseUp(mousePos);
+			passwordTextbox->handleMouseUp(mousePos);
+			
+			if (loginButton->handleMouseUp())
+			{
+				// TODO(fkp): Check username/password
+			}
+		}
+
 		default:
 		{
 		} break;
@@ -186,6 +203,12 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 		}
 	} break;
 
+	case sf::Event::TextEntered:
+	{
+		usernameTextbox->handleTextInput(event);
+		passwordTextbox->handleTextInput(event);
+	} break;
+	
 	default:
 	{
 	} break;
@@ -314,7 +337,10 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 	case ProgramState::LoginPage:
 	{
 		target.draw(usernameText);
+		usernameTextbox->draw(target);
 		target.draw(passwordText);
+		passwordTextbox->draw(target);
+		
 		loginButton->draw(target);
 	} break;
 
@@ -398,6 +424,14 @@ void CLogButBetter::initLoginPage()
 	usernameText.setPosition((WINDOW_WIDTH * 50 / 100) - (usernameText.getGlobalBounds().width / 2),
 							 (WINDOW_HEIGHT * 30 / 100) - (usernameText.getGlobalBounds().height / 2));
 	
+	usernameTextbox = new TextBox(font,
+								  sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 40 / 100 },
+								  sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 5 / 100 });
+	usernameTextbox->setActive(true);
+	passwordTextbox = new TextBox(font,
+								  sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 60 / 100},
+								  sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 5 / 100});
+
 	passwordText = sf::Text { "Password:", font, 24 };
 	passwordText.setFillColor(sf::Color::Black);
 	passwordText.setPosition((WINDOW_WIDTH * 50 / 100) - (passwordText.getGlobalBounds().width / 2),

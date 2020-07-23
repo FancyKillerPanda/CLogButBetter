@@ -8,6 +8,7 @@
 #include "common.hpp"
 #include "button.hpp"
 #include "cadet.hpp"
+#include "textbox.hpp"
 
 // Will be used to access buttons in the vector. Rather than using a
 // plain index, these names help to understand which button is being
@@ -61,9 +62,12 @@ private:
 	sf::Text passwordText;
 
 	Button* backButton = nullptr; // Needs to be pointer for delayed initialisation
-	Button* loginButton = nullptr;
 	std::vector<Button> homePageButtons;
 	std::vector<Button> managePageButtons;
+	
+	Button* loginButton = nullptr;
+	TextBox* usernameTextbox = nullptr;
+	TextBox* passwordTextbox = nullptr;
 
 	std::string cadetDatabaseFilepath = "res/cadets.csv";
 	std::vector<Cadet> cadetDatabase;
