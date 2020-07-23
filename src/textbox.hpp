@@ -27,6 +27,7 @@ public:
 	void draw(sf::RenderTarget& target);
 
 	void setActive(bool value);
+	const std::string& getText();
 };
 
 #endif

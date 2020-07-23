@@ -67,3 +67,8 @@ void TextBox::setActive(bool value)
 		backgroundShape.setOutlineThickness(0);
 	}
 }
+
+const std::string& TextBox::getText()
+{
+	return textValue;
+}

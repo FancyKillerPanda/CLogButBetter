@@ -185,7 +185,14 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			
 			if (loginButton->handleMouseUp())
 			{
-				// TODO(fkp): Check username/password
+				// const std::string& username = usernameTextbox->getText();
+				const std::string& password = passwordTextbox->getText();
+
+				if (password == "415sqn")
+				{
+					hasLoggedIn = true;
+					programState = ProgramState::ManagePage;
+				}
 			}
 		}
 
