@@ -438,6 +438,7 @@ void CLogButBetter::initLoginPage()
 	passwordTextbox = new TextBox(font,
 								  sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 60 / 100},
 								  sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 5 / 100});
+	passwordTextbox->setSecret(true);
 
 	passwordText = sf::Text { "Password:", font, 24 };
 	passwordText.setFillColor(sf::Color::Black);

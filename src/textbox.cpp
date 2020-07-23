@@ -30,7 +30,15 @@ void TextBox::handleTextInput(sf::Event& event)
 		{
 			if (event.text.unicode != 0)
 			{
-				displayedText += (char) event.text.unicode;
+				if (isSecret)
+				{
+					displayedText += '*';
+				}
+				else
+				{
+					displayedText += (char) event.text.unicode;
+				}
+				
 				textValue += (char) event.text.unicode;
 				drawableText.setString(displayedText);
 			}
@@ -66,6 +74,11 @@ void TextBox::setActive(bool value)
 	{
 		backgroundShape.setOutlineThickness(0);
 	}
+}
+
+void TextBox::setSecret(bool value)
+{
+	isSecret = value;
 }
 
 const std::string& TextBox::getText()

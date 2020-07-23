@@ -10,6 +10,7 @@ class TextBox
 {
 private:
 	bool isActive = false;
+	bool isSecret = false;
 
 	std::string displayedText;
 	std::string textValue;
@@ -27,6 +28,7 @@ public:
 	void draw(sf::RenderTarget& target);
 
 	void setActive(bool value);
+	void setSecret(bool value);
 	const std::string& getText();
 };
 
