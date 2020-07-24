@@ -70,6 +70,7 @@ private:
 	TextBox* usernameTextbox = nullptr;
 	TextBox* passwordTextbox = nullptr;
 
+	bool cadetDatabaseIsActive = true;
 	std::string cadetDatabaseFilepath = "res/cadets.csv";
 	std::vector<Cadet> cadetDatabase;
 	std::string itemDatabaseFilepath = "res/items.csv";
@@ -89,6 +90,9 @@ private:
 	void initManagePage();
 	void initLoginPage();
 
+	void drawCadetDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine);
+	void drawItemDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine);
+	
 	void writeCadetsToFile();
 	void readCadetsFromFile();
 	void writeItemsToFile();

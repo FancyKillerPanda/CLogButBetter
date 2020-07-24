@@ -247,20 +247,6 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 
 	case ProgramState::ViewDatabasePage:
 	{
-		// Values for ease of drawing
-		constexpr unsigned int tableX = WINDOW_WIDTH * 5 / 100;
-		constexpr unsigned int tableY = WINDOW_HEIGHT * 20 / 100;
-		constexpr unsigned int tableWidth = WINDOW_WIDTH * 90 / 100;
-		constexpr unsigned int tableHeight = WINDOW_HEIGHT * 75 / 100;
-
-		// NOTE(fkp): The +5 is just to add some padding
-		constexpr unsigned int serviceNumberX = tableX + 5;
-		constexpr unsigned int serviceNumberWidth = tableWidth * 15 / 100;
-		constexpr unsigned int rankX = serviceNumberX + serviceNumberWidth + 5;
-		constexpr unsigned int rankWidth = tableWidth * 10 / 100;
-		constexpr unsigned int nameX = rankX + rankWidth + 5;
-		constexpr unsigned int nameWidth = tableWidth * 25 / 100;
-
 		target.draw(titleText);
 		
 		sf::RectangleShape background { sf::Vector2f { WINDOW_WIDTH * 90 / 100, WINDOW_HEIGHT * 75 / 100 } };
@@ -273,55 +259,13 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 		sf::RectangleShape verticalLine { sf::Vector2f { 1, tableHeight }};
 		verticalLine.setFillColor(sf::Color::Black);
 
-		unsigned int currentY = tableY;
-		sf::Text entryText { "", font, 20 };
-		entryText.setFillColor(sf::Color::Black);
-
-		// Header row
-		entryText.setStyle(sf::Text::Bold);
-		entryText.setString("Service #");
-		entryText.setPosition((float) serviceNumberX, (float) currentY);
-		target.draw(entryText);
-
-		entryText.setString("Rank");
-		entryText.setPosition((float) rankX, (float) currentY);
-		target.draw(entryText);
-
-		entryText.setString("Name");
-		entryText.setPosition((float) nameX, (float) currentY);
-		target.draw(entryText);
-
-		currentY += entryText.getCharacterSize() + 3;
-		entryText.setStyle(sf::Text::Regular);
-		
-		for (Cadet& cadet : cadetDatabase)
+		if (cadetDatabaseIsActive)
 		{
-			entryText.setString(std::to_string(cadet.serviceNumber));
-			entryText.setPosition((float) serviceNumberX, (float) currentY);
-			target.draw(entryText);
-
-			entryText.setString(cadet.rankAbbrev);
-			entryText.setPosition((float) rankX, (float) currentY);
-			target.draw(entryText);
-
-			entryText.setString(cadet.firstName + " " + cadet.lastName);
-			entryText.setPosition((float) nameX, (float) currentY);
-			target.draw(entryText);
-
-			currentY += entryText.getCharacterSize() + 2;
+			drawCadetDatabase(target, horizontalLine, verticalLine);
 		}
-
-		// Draws the grid
-		verticalLine.setPosition(rankX - 5, tableY);
-		target.draw(verticalLine);
-		verticalLine.setPosition(nameX - 5, tableY);
-		target.draw(verticalLine);
-
-		// NOTE(fkp): +3 skips the header row, +2 for each row after
-		for (int y = tableY + entryText.getCharacterSize() + 3; y < tableY + tableWidth; y += entryText.getCharacterSize() + 2)
+		else
 		{
-			horizontalLine.setPosition(tableX, (float) y);
-			target.draw(horizontalLine);			
+			drawItemDatabase(target, horizontalLine, verticalLine);
 		}
 	} break;
 
@@ -457,6 +401,85 @@ void CLogButBetter::initLoginPage()
 	loginButton = new Button(font, "Login",
 							 sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 70 / 100},
 							 sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 5 / 100 });
+}
+
+void CLogButBetter::drawCadetDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine)
+{
+	// NOTE(fkp): The +5 is just to add some padding
+	constexpr unsigned int serviceNumberX = tableX + 5;
+	constexpr unsigned int serviceNumberWidth = tableWidth * 15 / 100;
+	constexpr unsigned int rankX = serviceNumberX + serviceNumberWidth + 5;
+	constexpr unsigned int rankWidth = tableWidth * 10 / 100;
+	constexpr unsigned int nameX = rankX + rankWidth + 5;
+	constexpr unsigned int nameWidth = tableWidth * 25 / 100;
+		
+	unsigned int currentY = tableY;
+	sf::Text entryText { "", font, 20 };
+	entryText.setFillColor(sf::Color::Black);
+
+	// Header row
+	entryText.setStyle(sf::Text::Bold);
+	entryText.setString("Service #");
+	entryText.setPosition((float) serviceNumberX, (float) currentY);
+	target.draw(entryText);
+
+	entryText.setString("Rank");
+	entryText.setPosition((float) rankX, (float) currentY);
+	target.draw(entryText);
+
+	entryText.setString("Name");
+	entryText.setPosition((float) nameX, (float) currentY);
+	target.draw(entryText);
+
+	currentY += entryText.getCharacterSize() + 3;
+	entryText.setStyle(sf::Text::Regular);
+		
+	for (Cadet& cadet : cadetDatabase)
+	{
+		entryText.setString(std::to_string(cadet.serviceNumber));
+		entryText.setPosition((float) serviceNumberX, (float) currentY);
+		target.draw(entryText);
+
+		entryText.setString(cadet.rankAbbrev);
+		entryText.setPosition((float) rankX, (float) currentY);
+		target.draw(entryText);
+
+		entryText.setString(cadet.firstName + " " + cadet.lastName);
+		entryText.setPosition((float) nameX, (float) currentY);
+		target.draw(entryText);
+
+		currentY += entryText.getCharacterSize() + 2;
+	}
+
+	// Draws the grid
+	verticalLine.setPosition(rankX - 5, tableY);
+	target.draw(verticalLine);
+	verticalLine.setPosition(nameX - 5, tableY);
+	target.draw(verticalLine);
+
+	// NOTE(fkp): +3 skips the header row, +2 for each row after
+	for (int y = tableY + entryText.getCharacterSize() + 3; y < tableY + tableWidth; y += entryText.getCharacterSize() + 2)
+	{
+		horizontalLine.setPosition(tableX, (float) y);
+		target.draw(horizontalLine);			
+	}
+}
+
+void CLogButBetter::drawItemDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine)
+{
+	// NOTE(fkp): The +5 is just to add some padding
+	constexpr unsigned int typeX = tableX + 5;
+	constexpr unsigned int typeWidth = tableWidth * 15 / 100;
+	constexpr unsigned int sizeX = typeX + typeWidth + 5;
+	constexpr unsigned int sizeWidth = tableWidth * 10 / 100;
+	constexpr unsigned int subsizeX = sizeX + sizeWidth + 5;
+	constexpr unsigned int subsizeWidth = tableWidth * 10 / 100;
+	constexpr unsigned int quantityX = subsizeX + subsizeWidth + 5;
+	constexpr unsigned int quantityWidth = tableWidth * 15 / 100;
+	constexpr unsigned int quantityOnOrderX = quantityX + quantityWidth + 5;
+	constexpr unsigned int quantityOnOrderWidth = tableWidth * 15 / 100;
+	constexpr unsigned int notesX = quantityOnOrderX + quantityOnOrderWidth + 5;
+	constexpr unsigned int notesWidth = tableWidth * 35 / 100;
 }
 
 #define READ_STRING_UNTIL_COMMA(name)			\

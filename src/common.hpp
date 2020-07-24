@@ -13,4 +13,10 @@
 
 #define SET_ORIGIN_CENTER(obj) obj.setOrigin(obj.getGlobalBounds().left + (obj.getGlobalBounds().width / 2), obj.getGlobalBounds().top + (obj.getGlobalBounds().height / 2))
 
+// Values for ease of drawing the databases
+constexpr unsigned int tableX = WINDOW_WIDTH * 5 / 100;
+constexpr unsigned int tableY = WINDOW_HEIGHT * 20 / 100;
+constexpr unsigned int tableWidth = WINDOW_WIDTH * 90 / 100;
+constexpr unsigned int tableHeight = WINDOW_HEIGHT * 75 / 100;
+
 #endif
