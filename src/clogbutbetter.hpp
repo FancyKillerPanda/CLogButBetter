@@ -9,6 +9,7 @@
 #include "button.hpp"
 #include "cadet.hpp"
 #include "textbox.hpp"
+#include "item.hpp"
 
 // Will be used to access buttons in the vector. Rather than using a
 // plain index, these names help to understand which button is being
@@ -71,6 +72,8 @@ private:
 
 	std::string cadetDatabaseFilepath = "res/cadets.csv";
 	std::vector<Cadet> cadetDatabase;
+	std::string itemDatabaseFilepath = "res/items.csv";
+	std::vector<ItemGroup> itemDatabase;
 
 	bool hasLoggedIn = false;
 	
@@ -88,6 +91,8 @@ private:
 
 	void writeCadetsToFile();
 	void readCadetsFromFile();
+	void writeItemsToFile();
+	void readItemsFromFile();
 };
 
 

@@ -17,6 +17,7 @@ CLogButBetter::CLogButBetter()
 	titleText.setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT * 12 / 100);
 
 	readCadetsFromFile();
+	readItemsFromFile();
 	
 	initHomePage();
 	initManagePage();
@@ -466,6 +467,11 @@ void CLogButBetter::initLoginPage()
 	READ_STRING_UNTIL_COMMA(nameStr);			\
 	name = std::stoul(nameStr);
 
+#define READ_INT_UNTIL_COMMA(name, nameStr)		\
+	std::string nameStr;						\
+	READ_STRING_UNTIL_COMMA(nameStr);			\
+	name = std::stoi(nameStr);
+
 // NOTE(fkp): Volatile - must stay in sync with writeCadetsToFile()
 void CLogButBetter::readCadetsFromFile()
 {
@@ -522,6 +528,76 @@ void CLogButBetter::writeCadetsToFile()
 		file << cadet.firstName << ",";
 		file << cadet.lastName << ",";
 
+		file << "\n";
+	}
+}
+
+// NOTE(fkp): Volatile - must stay in sync with writeItemsToFile()
+void CLogButBetter::readItemsFromFile()
+{
+	std::string lineStr;
+	std::ifstream file { itemDatabaseFilepath };
+
+	if (!file)
+	{
+		printf("Error: Failed to open item database file for reading.\n");
+		return;
+	}
+
+	itemDatabase.clear();
+	
+	while (std::getline(file, lineStr))
+	{
+		std::stringstream line { lineStr };
+		itemDatabase.emplace_back();
+		
+		std::string itemType;
+		READ_STRING_UNTIL_COMMA(itemType);
+		itemDatabase.back().type = getItemTypeFromString(itemType);
+
+		int itemSize;
+		READ_INT_UNTIL_COMMA(itemSize, itemSizeStr);
+		itemDatabase.back().size = itemSize;
+
+		int itemSubsize;
+		READ_INT_UNTIL_COMMA(itemSubsize, itemSubsizeStr);
+		itemDatabase.back().subsize = itemSubsize;
+
+		unsigned int itemQuantity;
+		READ_UINT_UNTIL_COMMA(itemQuantity, itemQuantityStr);
+		itemDatabase.back().quantity = itemQuantity;
+
+		unsigned int itemQuantityOnOrder;
+		READ_UINT_UNTIL_COMMA(itemQuantityOnOrder, itemQuantityOnOrderStr);
+		itemDatabase.back().quantityOnOrder = itemQuantityOnOrder;
+
+		std::string itemNotes;
+		READ_STRING_UNTIL_COMMA(itemNotes);
+		itemDatabase.back().notes = itemNotes;
+	}
+}
+
+// NOTE(fkp): Volatile - must stay in sync with readItemsFromFile()
+void CLogButBetter::writeItemsToFile()
+{
+	std::string line;
+	std::ofstream file { itemDatabaseFilepath };
+
+	if (!file)
+	{
+		printf("Error: Failed to open item database file for writing.\n");
+		return;
+	}
+
+	for (ItemGroup& item : itemDatabase)
+	{
+		file << getStringFromItemType(item.type) << ",";
+		file << item.size << ",";
+		file << item.subsize << ",";
+		file << item.quantity << ",";
+		file << item.quantityOnOrder << ",";
+		file << item.notes << ",";
+		
 		file << "\n";
 	}
 }
