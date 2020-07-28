@@ -23,6 +23,7 @@ CLogButBetter::CLogButBetter()
 	initHomePage();
 	initManagePage();
 	initLoginPage();
+	initAddItemPage();
 
 	backButton = new Button(font, "<--",
 							sf::Vector2i { WINDOW_WIDTH * 5 / 100, WINDOW_HEIGHT * 5 / 100},
@@ -74,6 +75,11 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			loginButton->handleMouseMove(mousePos);
 		} break;
 
+		case ProgramState::AddItemPage:
+		{
+			typeSelectionMenu->handleMouseMove(mousePos);
+		} break;
+
 		default:
 		{
 		} break;
@@ -110,6 +116,11 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 		case ProgramState::LoginPage:
 		{
 			loginButton->handleMouseDown(mousePos);
+		} break;
+
+		case ProgramState::AddItemPage:
+		{
+			typeSelectionMenu->handleMouseDown(mousePos);
 		} break;
 
 		default:
@@ -184,9 +195,20 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 
 		case ProgramState::ManagePage:
 		{
-			for (Button& button : managePageButtons)
+			for (int i = 0; i < managePageButtons.size(); i++)
 			{
-				button.handleMouseUp();
+				Button& button = managePageButtons[i];
+				
+				if (button.handleMouseUp())
+				{
+					switch (i)
+					{
+					case ADD_ITEM_BUTTON:
+					{
+						programState = ProgramState::AddItemPage;
+					} break;
+					}
+				}
 			}
 		} break;
 		
@@ -208,6 +230,11 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			}
 		}
 
+		case ProgramState::AddItemPage:
+		{
+			typeSelectionMenu->handleMouseUp();
+		} break;
+
 		default:
 		{
 		} break;
@@ -224,8 +251,18 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 
 	case sf::Event::TextEntered:
 	{
-		usernameTextbox->handleTextInput(event);
-		passwordTextbox->handleTextInput(event);
+		switch (programState)
+		{
+		case ProgramState::LoginPage:
+		{
+			usernameTextbox->handleTextInput(event);
+			passwordTextbox->handleTextInput(event);
+		} break;
+
+		case ProgramState::AddItemPage:
+		{
+		} break;
+		}
 	} break;
 	
 	default:
@@ -305,6 +342,11 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 		passwordTextbox->draw(target);
 		
 		loginButton->draw(target);
+	} break;
+
+	case ProgramState::AddItemPage:
+	{
+		typeSelectionMenu->draw(target);
 	} break;
 
 	default:
@@ -404,6 +446,11 @@ void CLogButBetter::initLoginPage()
 	loginButton = new Button(font, "Login",
 							 sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 70 / 100},
 							 sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 5 / 100 });
+}
+
+void CLogButBetter::initAddItemPage()
+{
+	typeSelectionMenu = new DropDownMenu(font, "Type?", { "LSSD Shirt", "SSSD Shirt", "SD Trousers" }, sf::Vector2i { WINDOW_WIDTH * 15 / 100, WINDOW_HEIGHT * 30 / 100 });
 }
 
 void CLogButBetter::drawCadetDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine)

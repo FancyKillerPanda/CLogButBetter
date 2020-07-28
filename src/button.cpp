@@ -98,3 +98,13 @@ void Button::setHot(bool value)
 	}
 }
 
+void Button::setText(const std::string& newText)
+{
+	text = newText;
+	drawableText.setString(text);
+}
+
+const std::string& Button::getText()
+{
+	return text;
+}

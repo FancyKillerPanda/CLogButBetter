@@ -10,6 +10,7 @@
 #include "cadet.hpp"
 #include "textbox.hpp"
 #include "item.hpp"
+#include "dropdownmenu.hpp"
 
 // Will be used to access buttons in the vector. Rather than using a
 // plain index, these names help to understand which button is being
@@ -50,6 +51,7 @@ enum class ProgramState
 	ReturnsPage,
 	ManagePage,
 	LoginPage,
+	AddItemPage,
 };
 
 class CLogButBetter
@@ -58,17 +60,21 @@ private:
 	ProgramState programState = ProgramState::HomePage;
 
 	sf::Font font;
-	sf::Text titleText;
-	sf::Text usernameText;
-	sf::Text passwordText;
 
+	sf::Text titleText;
 	Button* backButton = nullptr; // Needs to be pointer for delayed initialisation
 	std::vector<Button> homePageButtons;
 	std::vector<Button> managePageButtons;
 	
-	Button* loginButton = nullptr;
+	// Login page
+	sf::Text usernameText;
+	sf::Text passwordText;
 	TextBox* usernameTextbox = nullptr;
 	TextBox* passwordTextbox = nullptr;
+	Button* loginButton = nullptr;
+
+	// Add item page
+	DropDownMenu* typeSelectionMenu = nullptr;
 
 	bool cadetDatabaseIsActive = true;
 	std::string cadetDatabaseFilepath = "res/cadets.csv";
@@ -89,6 +95,7 @@ private:
 	void initHomePage();
 	void initManagePage();
 	void initLoginPage();
+	void initAddItemPage();
 
 	void drawCadetDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine);
 	void drawItemDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine);

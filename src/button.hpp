@@ -28,6 +28,9 @@ public:
 
 	void setActive(bool value);
 	void setHot(bool value);
+	void setText(const std::string& newText);
+
+	const std::string& getText();
 };
 
 #endif
