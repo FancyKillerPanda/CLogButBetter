@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <assert.h>
 
 #include "clogbutbetter.hpp"
 
@@ -139,11 +140,13 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 					case VIEW_CADETS_BUTTON:
 					{
 						programState = ProgramState::ViewDatabasePage;
+						cadetDatabaseIsActive = true;
 					} break;
 									
 					case VIEW_SQUADRON_BUTTON:
 					{
 						programState = ProgramState::ViewDatabasePage;
+						cadetDatabaseIsActive = false;
 					} break;
 									
 					case ISSUES_BUTTON:
@@ -480,6 +483,116 @@ void CLogButBetter::drawItemDatabase(sf::RenderTarget& target, sf::RectangleShap
 	constexpr unsigned int quantityOnOrderWidth = tableWidth * 15 / 100;
 	constexpr unsigned int notesX = quantityOnOrderX + quantityOnOrderWidth + 5;
 	constexpr unsigned int notesWidth = tableWidth * 35 / 100;
+
+	unsigned int currentY = tableY;
+	sf::Text entryText { "", font, 20 };
+	entryText.setFillColor(sf::Color::Black);
+
+	// Header row
+	entryText.setStyle(sf::Text::Bold);
+	entryText.setString("Type");
+	entryText.setPosition((float) typeX, (float) currentY);
+	target.draw(entryText);
+
+	entryText.setString("Size");
+	entryText.setPosition((float) sizeX, (float) currentY);
+	target.draw(entryText);
+
+	entryText.setString("Subsize");
+	entryText.setPosition((float) subsizeX, (float) currentY);
+	target.draw(entryText);
+
+	entryText.setString("Quantity");
+	entryText.setPosition((float) quantityX, (float) currentY);
+	target.draw(entryText);
+
+	entryText.setString("Ordered");
+	entryText.setPosition((float) quantityOnOrderX, (float) currentY);
+	target.draw(entryText);
+
+	entryText.setString("Notes");
+	entryText.setPosition((float) notesX, (float) currentY);
+	target.draw(entryText);
+
+	currentY += entryText.getCharacterSize() + 3;
+	entryText.setStyle(sf::Text::Regular);
+	
+	for (ItemGroup& itemGroup : itemDatabase)
+	{
+		entryText.setString(getStringFromItemType(itemGroup.type));
+		entryText.setPosition((float) typeX, (float) currentY);
+		target.draw(entryText);
+
+		entryText.setString(std::to_string(itemGroup.size));
+		entryText.setPosition((float) sizeX, (float) currentY);
+		target.draw(entryText);
+
+		if (itemGroup.subsize != -1)
+		{
+			entryText.setString(std::to_string(itemGroup.subsize));
+		}
+		else
+		{
+			entryText.setString("-");
+		}
+
+		if (itemGroup.type == ItemType::SD_Trousers ||
+			itemGroup.type == ItemType::DPU_Pants)
+		{
+			if (itemGroup.subsize == 0)
+			{
+				entryText.setString("S");
+			}
+			else if (itemGroup.subsize == 1)
+			{
+				entryText.setString("R");
+			}
+			else if (itemGroup.subsize == 2)
+			{
+				entryText.setString("L");
+			}
+			else
+			{
+				assert(false);
+			}
+		}
+		
+		entryText.setPosition((float) subsizeX, (float) currentY);
+		target.draw(entryText);
+
+		entryText.setString(std::to_string(itemGroup.quantity));
+		entryText.setPosition((float) quantityX, (float) currentY);
+		target.draw(entryText);
+
+		entryText.setString(std::to_string(itemGroup.quantityOnOrder));
+		entryText.setPosition((float) quantityOnOrderX, (float) currentY);
+		target.draw(entryText);
+
+		entryText.setString(itemGroup.notes);
+		entryText.setPosition((float) notesX, (float) currentY);
+		target.draw(entryText);
+
+		currentY += entryText.getCharacterSize() + 2;
+	}
+
+	// Draws the grid
+	verticalLine.setPosition(sizeX - 5, tableY);
+	target.draw(verticalLine);
+	verticalLine.setPosition(subsizeX - 5, tableY);
+	target.draw(verticalLine);
+	verticalLine.setPosition(quantityX - 5, tableY);
+	target.draw(verticalLine);
+	verticalLine.setPosition(quantityOnOrderX - 5, tableY);
+	target.draw(verticalLine);
+	verticalLine.setPosition(notesX - 5, tableY);
+	target.draw(verticalLine);
+
+	// NOTE(fkp): +3 skips the header row, +2 for each row after
+	for (int y = tableY + entryText.getCharacterSize() + 3; y < tableY + tableWidth; y += entryText.getCharacterSize() + 2)
+	{
+		horizontalLine.setPosition(tableX, (float) y);
+		target.draw(horizontalLine);			
+	}
 }
 
 #define READ_STRING_UNTIL_COMMA(name)			\
