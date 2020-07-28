@@ -472,12 +472,10 @@ void CLogButBetter::drawItemDatabase(sf::RenderTarget& target, sf::RectangleShap
 {
 	// NOTE(fkp): The +5 is just to add some padding
 	constexpr unsigned int typeX = tableX + 5;
-	constexpr unsigned int typeWidth = tableWidth * 15 / 100;
+	constexpr unsigned int typeWidth = tableWidth * 20 / 100;
 	constexpr unsigned int sizeX = typeX + typeWidth + 5;
 	constexpr unsigned int sizeWidth = tableWidth * 10 / 100;
-	constexpr unsigned int subsizeX = sizeX + sizeWidth + 5;
-	constexpr unsigned int subsizeWidth = tableWidth * 10 / 100;
-	constexpr unsigned int quantityX = subsizeX + subsizeWidth + 5;
+	constexpr unsigned int quantityX = sizeX + sizeWidth + 5;
 	constexpr unsigned int quantityWidth = tableWidth * 15 / 100;
 	constexpr unsigned int quantityOnOrderX = quantityX + quantityWidth + 5;
 	constexpr unsigned int quantityOnOrderWidth = tableWidth * 15 / 100;
@@ -498,10 +496,6 @@ void CLogButBetter::drawItemDatabase(sf::RenderTarget& target, sf::RectangleShap
 	entryText.setPosition((float) sizeX, (float) currentY);
 	target.draw(entryText);
 
-	entryText.setString("Subsize");
-	entryText.setPosition((float) subsizeX, (float) currentY);
-	target.draw(entryText);
-
 	entryText.setString("Quantity");
 	entryText.setPosition((float) quantityX, (float) currentY);
 	target.draw(entryText);
@@ -517,58 +511,52 @@ void CLogButBetter::drawItemDatabase(sf::RenderTarget& target, sf::RectangleShap
 	currentY += entryText.getCharacterSize() + 3;
 	entryText.setStyle(sf::Text::Regular);
 	
-	for (ItemGroup& itemGroup : itemDatabase)
+	for (ItemGroup& item : itemDatabase)
 	{
-		entryText.setString(getStringFromItemType(itemGroup.type));
+		entryText.setString(getStringFromItemType(item.type));
 		entryText.setPosition((float) typeX, (float) currentY);
 		target.draw(entryText);
 
-		entryText.setString(std::to_string(itemGroup.size));
-		entryText.setPosition((float) sizeX, (float) currentY);
-		target.draw(entryText);
-
-		if (itemGroup.subsize != -1)
+		if (item.type == ItemType::SD_LongSleeve)
 		{
-			entryText.setString(std::to_string(itemGroup.subsize));
+			entryText.setString(std::to_string(item.size) + "/" + std::to_string(item.subsize));
 		}
-		else
+		else if (item.type == ItemType::SD_Trousers || item.type == ItemType::DPU_Pants)
 		{
-			entryText.setString("-");
-		}
-
-		if (itemGroup.type == ItemType::SD_Trousers ||
-			itemGroup.type == ItemType::DPU_Pants)
-		{
-			if (itemGroup.subsize == 0)
+			if (item.subsize == 0)
 			{
-				entryText.setString("S");
+				entryText.setString(std::to_string(item.size) + "S");
 			}
-			else if (itemGroup.subsize == 1)
+			else if (item.subsize == 1)
 			{
-				entryText.setString("R");
+				entryText.setString(std::to_string(item.size) + "R");
 			}
-			else if (itemGroup.subsize == 2)
+			else if (item.subsize == 2)
 			{
-				entryText.setString("L");
+				entryText.setString(std::to_string(item.size) + "L");
 			}
 			else
 			{
 				assert(false);
 			}
 		}
+		else
+		{
+			entryText.setString(std::to_string(item.size));
+		}
 		
-		entryText.setPosition((float) subsizeX, (float) currentY);
+		entryText.setPosition((float) sizeX, (float) currentY);
 		target.draw(entryText);
 
-		entryText.setString(std::to_string(itemGroup.quantity));
+		entryText.setString(std::to_string(item.quantity));
 		entryText.setPosition((float) quantityX, (float) currentY);
 		target.draw(entryText);
 
-		entryText.setString(std::to_string(itemGroup.quantityOnOrder));
+		entryText.setString(std::to_string(item.quantityOnOrder));
 		entryText.setPosition((float) quantityOnOrderX, (float) currentY);
 		target.draw(entryText);
 
-		entryText.setString(itemGroup.notes);
+		entryText.setString(item.notes);
 		entryText.setPosition((float) notesX, (float) currentY);
 		target.draw(entryText);
 
@@ -577,8 +565,6 @@ void CLogButBetter::drawItemDatabase(sf::RenderTarget& target, sf::RectangleShap
 
 	// Draws the grid
 	verticalLine.setPosition(sizeX - 5, tableY);
-	target.draw(verticalLine);
-	verticalLine.setPosition(subsizeX - 5, tableY);
 	target.draw(verticalLine);
 	verticalLine.setPosition(quantityX - 5, tableY);
 	target.draw(verticalLine);
