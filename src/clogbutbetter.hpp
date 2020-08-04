@@ -52,6 +52,7 @@ enum class ProgramState
 	ManagePage,
 	LoginPage,
 	AddItemPage,
+	RestoreBackupPage,
 };
 
 class CLogButBetter
@@ -65,6 +66,10 @@ private:
 	Button* backButton = nullptr; // Needs to be pointer for delayed initialisation
 	std::vector<Button> homePageButtons;
 	std::vector<Button> managePageButtons;
+
+	sf::Texture laurelTexture;
+	sf::Sprite laurelSpriteLeft;
+	sf::Sprite laurelSpriteRight;
 	
 	// Login page
 	sf::Text usernameText;
@@ -76,13 +81,22 @@ private:
 	// Add item page
 	DropDownMenu* typeSelectionMenu = nullptr;
 
+	// Restore backup page
+	sf::Text filepathText;
+	Button* restoreButton = nullptr;
+	TextBox* restoreFilepathTextbox = nullptr;
+
 	bool cadetDatabaseIsActive = true;
 	std::string cadetDatabaseFilepath = "res/cadets.csv";
 	std::vector<Cadet> cadetDatabase;
 	std::string itemDatabaseFilepath = "res/items.csv";
 	std::vector<ItemGroup> itemDatabase;
 
+#ifdef NDEBUG
 	bool hasLoggedIn = false;
+#else
+	bool hasLoggedIn = true;
+#endif
 	
 public:
 	CLogButBetter();
@@ -96,6 +110,7 @@ private:
 	void initManagePage();
 	void initLoginPage();
 	void initAddItemPage();
+	void initRestoreBackupPage();
 
 	void drawCadetDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine);
 	void drawItemDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine);

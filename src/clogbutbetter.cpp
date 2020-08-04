@@ -17,6 +17,19 @@ CLogButBetter::CLogButBetter()
 	titleText.setStyle(sf::Text::Bold | sf::Text::Underlined);
 	titleText.setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT * 12 / 100);
 
+	// Loads laurel sprites
+	laurelTexture.loadFromFile("res/laurel.png");
+	
+	laurelSpriteLeft.setTexture(laurelTexture);
+	SET_ORIGIN_CENTER(laurelSpriteLeft);
+	laurelSpriteLeft.setScale(sf::Vector2f { -0.25f, 0.25f });
+	laurelSpriteLeft.setPosition(WINDOW_WIDTH * 15 / 100, WINDOW_HEIGHT * 80 / 100);
+	
+	laurelSpriteRight.setTexture(laurelTexture);
+	SET_ORIGIN_CENTER(laurelSpriteRight);
+	laurelSpriteRight.setScale(sf::Vector2f { 0.25f, 0.25f });
+	laurelSpriteRight.setPosition(WINDOW_WIDTH * 85 / 100, WINDOW_HEIGHT * 80 / 100);
+	
 	readCadetsFromFile();
 	readItemsFromFile();
 	
@@ -24,6 +37,7 @@ CLogButBetter::CLogButBetter()
 	initManagePage();
 	initLoginPage();
 	initAddItemPage();
+	initRestoreBackupPage();
 
 	backButton = new Button(font, "<--",
 							sf::Vector2i { WINDOW_WIDTH * 5 / 100, WINDOW_HEIGHT * 5 / 100},
@@ -80,6 +94,11 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			typeSelectionMenu->handleMouseMove(mousePos);
 		} break;
 
+		case ProgramState::RestoreBackupPage:
+		{
+			restoreButton->handleMouseMove(mousePos);
+		} break;
+
 		default:
 		{
 		} break;
@@ -121,6 +140,11 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 		case ProgramState::AddItemPage:
 		{
 			typeSelectionMenu->handleMouseDown(mousePos);
+		} break;
+
+		case ProgramState::RestoreBackupPage:
+		{
+			restoreButton->handleMouseDown(mousePos);
 		} break;
 
 		default:
@@ -207,6 +231,11 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 					{
 						programState = ProgramState::AddItemPage;
 					} break;
+
+					case RESTORE_BACKUP_BUTTON:
+					{
+						programState = ProgramState::RestoreBackupPage;
+					} break;
 					}
 				}
 			}
@@ -229,6 +258,16 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 				}
 			}
 		}
+
+		case ProgramState::RestoreBackupPage:
+		{
+			restoreFilepathTextbox->handleMouseUp(mousePos);
+
+			if (restoreButton->handleMouseUp())
+			{
+				// TODO(fkp): Restore
+			}
+		} break;
 
 		case ProgramState::AddItemPage:
 		{
@@ -259,8 +298,9 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			passwordTextbox->handleTextInput(event);
 		} break;
 
-		case ProgramState::AddItemPage:
+		case ProgramState::RestoreBackupPage:
 		{
+			restoreFilepathTextbox->handleTextInput(event);
 		} break;
 		}
 	} break;
@@ -278,6 +318,8 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 	case ProgramState::HomePage:
 	{
 		target.draw(titleText);
+		target.draw(laurelSpriteLeft);
+		target.draw(laurelSpriteRight);
 
 		for (Button& button : homePageButtons)
 		{
@@ -347,6 +389,13 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 	case ProgramState::AddItemPage:
 	{
 		typeSelectionMenu->draw(target);
+	} break;
+
+	case ProgramState::RestoreBackupPage:
+	{
+		restoreButton->draw(target);
+		restoreFilepathTextbox->draw(target);
+		target.draw(filepathText);
 	} break;
 
 	default:
@@ -444,13 +493,32 @@ void CLogButBetter::initLoginPage()
 							 (WINDOW_HEIGHT * 50 / 100) - (passwordText.getGlobalBounds().height / 2));
 	
 	loginButton = new Button(font, "Login",
-							 sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 70 / 100},
+							 sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 70 / 100 },
 							 sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 5 / 100 });
 }
 
 void CLogButBetter::initAddItemPage()
 {
 	typeSelectionMenu = new DropDownMenu(font, "Type?", { "LSSD Shirt", "SSSD Shirt", "SD Trousers" }, sf::Vector2i { WINDOW_WIDTH * 15 / 100, WINDOW_HEIGHT * 30 / 100 });
+}
+
+void CLogButBetter::initRestoreBackupPage()
+{
+	restoreButton = new Button(font, "Restore",
+							   sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 60 / 100 },
+							   sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 5 / 100 });
+
+	restoreFilepathTextbox = new TextBox(font,
+										 sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 40 / 100 },
+										 sf::Vector2i { WINDOW_WIDTH * 40 / 100, WINDOW_HEIGHT * 5 / 100 });
+	restoreFilepathTextbox->setActive(true);
+
+
+	filepathText = sf::Text { "File Path:", font, 24 };
+	filepathText.setFillColor(sf::Color::Black);
+	filepathText.setPosition((WINDOW_WIDTH * 50 / 100) - (filepathText.getGlobalBounds().width / 2),
+							 (WINDOW_HEIGHT * 30 / 100) - (filepathText.getGlobalBounds().height / 2));
+	
 }
 
 void CLogButBetter::drawCadetDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine)
