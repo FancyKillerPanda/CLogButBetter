@@ -11,6 +11,7 @@ class TextBox
 private:
 	bool isActive = false;
 	bool isSecret = false;
+	bool isNumbersOnly = false;
 
 	std::string displayedText;
 	std::string textValue;
@@ -29,6 +30,7 @@ public:
 
 	void setActive(bool value);
 	void setSecret(bool value);
+	void setNumbersOnly(bool value);
 	const std::string& getText();
 };
 

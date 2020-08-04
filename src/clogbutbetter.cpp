@@ -575,10 +575,12 @@ void CLogButBetter::initAddItemPage()
 	quantityTextbox = new TextBox(font,
 								  sf::Vector2i { WINDOW_WIDTH * 60 / 100, WINDOW_HEIGHT * 20 / 100 },
 								  sf::Vector2i { WINDOW_WIDTH * 10 / 100, WINDOW_HEIGHT * 5 / 100 });
+	quantityTextbox->setNumbersOnly(true);
 	
 	quantityOrderedTextbox = new TextBox(font,
 										 sf::Vector2i { WINDOW_WIDTH * 80 / 100, WINDOW_HEIGHT * 20 / 100 },
 										sf::Vector2i { WINDOW_WIDTH * 10 / 100, WINDOW_HEIGHT * 5 / 100 });
+	quantityOrderedTextbox->setNumbersOnly(true);
 }
 
 void CLogButBetter::initRestoreBackupPage()

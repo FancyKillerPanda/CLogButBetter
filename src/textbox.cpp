@@ -28,8 +28,14 @@ void TextBox::handleTextInput(sf::Event& event)
 	{
 		if (event.text.unicode != '\b')
 		{
-			if (event.text.unicode != 0)
+			if (event.text.unicode != 0 && event.text.unicode != '\r')
 			{
+				if (isNumbersOnly &&
+					(event.text.unicode < '0' || event.text.unicode > '9'))
+				{
+					return;
+				}
+				
 				if (isSecret)
 				{
 					displayedText += '*';
@@ -79,6 +85,11 @@ void TextBox::setActive(bool value)
 void TextBox::setSecret(bool value)
 {
 	isSecret = value;
+}
+
+void TextBox::setNumbersOnly(bool value)
+{
+	isNumbersOnly = value;
 }
 
 const std::string& TextBox::getText()
