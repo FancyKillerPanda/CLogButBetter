@@ -261,7 +261,8 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 
 		case ProgramState::RestoreBackupPage:
 		{
-			restoreFilepathTextbox->handleMouseUp(mousePos);
+			cadetRestoreFilepathTextbox->handleMouseUp(mousePos);
+			itemRestoreFilepathTextbox->handleMouseUp(mousePos);
 
 			if (restoreButton->handleMouseUp())
 			{
@@ -300,7 +301,8 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 
 		case ProgramState::RestoreBackupPage:
 		{
-			restoreFilepathTextbox->handleTextInput(event);
+			cadetRestoreFilepathTextbox->handleTextInput(event);
+			itemRestoreFilepathTextbox->handleTextInput(event);
 		} break;
 		}
 	} break;
@@ -394,8 +396,10 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 	case ProgramState::RestoreBackupPage:
 	{
 		restoreButton->draw(target);
-		restoreFilepathTextbox->draw(target);
-		target.draw(filepathText);
+		cadetRestoreFilepathTextbox->draw(target);
+		itemRestoreFilepathTextbox->draw(target);
+		target.draw(cadetDatabaseFilepathText);
+		target.draw(itemDatabaseFilepathText);
 	} break;
 
 	default:
@@ -505,20 +509,27 @@ void CLogButBetter::initAddItemPage()
 void CLogButBetter::initRestoreBackupPage()
 {
 	restoreButton = new Button(font, "Restore",
-							   sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 60 / 100 },
+							   sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 70 / 100 },
 							   sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 5 / 100 });
 
-	restoreFilepathTextbox = new TextBox(font,
-										 sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 40 / 100 },
-										 sf::Vector2i { WINDOW_WIDTH * 40 / 100, WINDOW_HEIGHT * 5 / 100 });
-	restoreFilepathTextbox->setActive(true);
-
-
-	filepathText = sf::Text { "File Path:", font, 24 };
-	filepathText.setFillColor(sf::Color::Black);
-	filepathText.setPosition((WINDOW_WIDTH * 50 / 100) - (filepathText.getGlobalBounds().width / 2),
-							 (WINDOW_HEIGHT * 30 / 100) - (filepathText.getGlobalBounds().height / 2));
+	cadetDatabaseFilepathText = sf::Text { "Cadet Database File Path:", font, 24 };
+	cadetDatabaseFilepathText.setFillColor(sf::Color::Black);
+	cadetDatabaseFilepathText.setPosition((WINDOW_WIDTH * 50 / 100) - (cadetDatabaseFilepathText.getGlobalBounds().width / 2),
+										  (WINDOW_HEIGHT * 30 / 100) - (cadetDatabaseFilepathText.getGlobalBounds().height / 2));
 	
+	cadetRestoreFilepathTextbox = new TextBox(font,
+											  sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 40 / 100 },
+											  sf::Vector2i { WINDOW_WIDTH * 60 / 100, WINDOW_HEIGHT * 5 / 100 });
+	cadetRestoreFilepathTextbox->setActive(true);
+
+	itemDatabaseFilepathText = sf::Text { "Item Database File Path:", font, 24 };
+	itemDatabaseFilepathText.setFillColor(sf::Color::Black);
+	itemDatabaseFilepathText.setPosition((WINDOW_WIDTH * 50 / 100) - (itemDatabaseFilepathText.getGlobalBounds().width / 2),
+										 (WINDOW_HEIGHT * 50 / 100) - (itemDatabaseFilepathText.getGlobalBounds().height / 2));
+	
+	itemRestoreFilepathTextbox = new TextBox(font,
+											 sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 60 / 100 },
+											 sf::Vector2i { WINDOW_WIDTH * 60 / 100, WINDOW_HEIGHT * 5 / 100 });
 }
 
 void CLogButBetter::drawCadetDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine)

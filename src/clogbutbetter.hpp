@@ -82,9 +82,11 @@ private:
 	DropDownMenu* typeSelectionMenu = nullptr;
 
 	// Restore backup page
-	sf::Text filepathText;
+	sf::Text itemDatabaseFilepathText;
+	sf::Text cadetDatabaseFilepathText;
 	Button* restoreButton = nullptr;
-	TextBox* restoreFilepathTextbox = nullptr;
+	TextBox* cadetRestoreFilepathTextbox = nullptr;
+	TextBox* itemRestoreFilepathTextbox = nullptr;
 
 	bool cadetDatabaseIsActive = true;
 	std::string cadetDatabaseFilepath = "res/cadets.csv";
