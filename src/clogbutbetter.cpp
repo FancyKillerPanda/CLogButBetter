@@ -264,9 +264,16 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			cadetRestoreFilepathTextbox->handleMouseUp(mousePos);
 			itemRestoreFilepathTextbox->handleMouseUp(mousePos);
 
-			if (restoreButton->handleMouseUp())
+			if (restoreButton->handleMouseUp() &&
+				cadetRestoreFilepathTextbox->getText() != "" &&
+				itemRestoreFilepathTextbox->getText() != "")
 			{
-				// TODO(fkp): Restore
+				cadetDatabaseFilepath = cadetRestoreFilepathTextbox->getText();
+				readCadetsFromFile();
+				itemDatabaseFilepath = itemRestoreFilepathTextbox->getText();
+				readItemsFromFile();
+
+				programState = ProgramState::ManagePage;
 			}
 		} break;
 
