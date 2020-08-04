@@ -79,7 +79,14 @@ private:
 	Button* loginButton = nullptr;
 
 	// Add item page
+	Button* addButton = nullptr;
 	DropDownMenu* typeSelectionMenu = nullptr;
+	sf::Text sizeText;
+	TextBox* sizeTextbox = nullptr;
+	sf::Text quantityText;
+	TextBox* quantityTextbox = nullptr;
+	sf::Text quantityOrderedText;
+	TextBox* quantityOrderedTextbox = nullptr;
 
 	// Restore backup page
 	sf::Text itemDatabaseFilepathText;

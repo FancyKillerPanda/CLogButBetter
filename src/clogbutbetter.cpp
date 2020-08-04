@@ -92,6 +92,7 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 		case ProgramState::AddItemPage:
 		{
 			typeSelectionMenu->handleMouseMove(mousePos);
+			addButton->handleMouseMove(mousePos);
 		} break;
 
 		case ProgramState::RestoreBackupPage:
@@ -140,6 +141,7 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 		case ProgramState::AddItemPage:
 		{
 			typeSelectionMenu->handleMouseDown(mousePos);
+			addButton->handleMouseDown(mousePos);
 		} break;
 
 		case ProgramState::RestoreBackupPage:
@@ -280,6 +282,15 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 		case ProgramState::AddItemPage:
 		{
 			typeSelectionMenu->handleMouseUp();
+
+			if (addButton->handleMouseUp())
+			{
+				// TODO(fkp): Add
+			}
+			
+			sizeTextbox->handleMouseUp(mousePos);
+			quantityTextbox->handleMouseUp(mousePos);
+			quantityOrderedTextbox->handleMouseUp(mousePos);
 		} break;
 
 		default:
@@ -310,6 +321,13 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 		{
 			cadetRestoreFilepathTextbox->handleTextInput(event);
 			itemRestoreFilepathTextbox->handleTextInput(event);
+		} break;
+
+		case ProgramState::AddItemPage:
+		{
+			sizeTextbox->handleTextInput(event);
+			quantityTextbox->handleTextInput(event);
+			quantityOrderedTextbox->handleTextInput(event);
 		} break;
 		}
 	} break;
@@ -397,7 +415,16 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 
 	case ProgramState::AddItemPage:
 	{
+		addButton->draw(target);
 		typeSelectionMenu->draw(target);
+
+		target.draw(sizeText);
+		target.draw(quantityText);
+		target.draw(quantityOrderedText);
+		
+		sizeTextbox->draw(target);
+		quantityTextbox->draw(target);
+		quantityOrderedTextbox->draw(target);
 	} break;
 
 	case ProgramState::RestoreBackupPage:
@@ -510,7 +537,48 @@ void CLogButBetter::initLoginPage()
 
 void CLogButBetter::initAddItemPage()
 {
-	typeSelectionMenu = new DropDownMenu(font, "Type?", { "LSSD Shirt", "SSSD Shirt", "SD Trousers" }, sf::Vector2i { WINDOW_WIDTH * 15 / 100, WINDOW_HEIGHT * 30 / 100 });
+	addButton = new Button(font, "Add",
+						   sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 60 / 100 },
+						   sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 10 / 100 });
+	
+	typeSelectionMenu = new DropDownMenu(font, "Type?", { "LSSD Shirt", "SSSD Shirt",
+														  "SD Trousers", "SD Jumper",
+														  "SD Belt", "SD Shoes",
+														  "DPU Shirt", "DPU Pants",
+														  "DPU Jumper", "DPU Boots",
+														  "HFFK", "Hat Badge",
+														  "Puggaree", "Bush Hat",
+														  "Rank Slides", "Webbing",
+														  "Japara" },
+										 sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 10 / 100 });
+
+	
+	sizeText = sf::Text { "Size:", font, 24 };
+	sizeText.setFillColor(sf::Color::Black);
+	sizeText.setPosition((WINDOW_WIDTH * 40 / 100) - (sizeText.getGlobalBounds().width / 2),
+						 (WINDOW_HEIGHT * 10 / 100) - (sizeText.getGlobalBounds().height / 2));
+	
+	quantityText = sf::Text { "Quantity:", font, 24 };
+	quantityText.setFillColor(sf::Color::Black);
+	quantityText.setPosition((WINDOW_WIDTH * 60 / 100) - (quantityText.getGlobalBounds().width / 2),
+							 (WINDOW_HEIGHT * 10 / 100) - (quantityText.getGlobalBounds().height / 2));
+	
+	quantityOrderedText = sf::Text { "Quantity Ordered:", font, 24 };
+	quantityOrderedText.setFillColor(sf::Color::Black);
+	quantityOrderedText.setPosition((WINDOW_WIDTH * 80 / 100) - (quantityOrderedText.getGlobalBounds().width / 2),
+									(WINDOW_HEIGHT * 10 / 100) - (quantityOrderedText.getGlobalBounds().height / 2));
+	
+	sizeTextbox = new TextBox(font,
+							  sf::Vector2i { WINDOW_WIDTH * 40 / 100, WINDOW_HEIGHT * 20 / 100 },
+							  sf::Vector2i { WINDOW_WIDTH * 10 / 100, WINDOW_HEIGHT * 5 / 100 });
+	
+	quantityTextbox = new TextBox(font,
+								  sf::Vector2i { WINDOW_WIDTH * 60 / 100, WINDOW_HEIGHT * 20 / 100 },
+								  sf::Vector2i { WINDOW_WIDTH * 10 / 100, WINDOW_HEIGHT * 5 / 100 });
+	
+	quantityOrderedTextbox = new TextBox(font,
+										 sf::Vector2i { WINDOW_WIDTH * 80 / 100, WINDOW_HEIGHT * 20 / 100 },
+										sf::Vector2i { WINDOW_WIDTH * 10 / 100, WINDOW_HEIGHT * 5 / 100 });
 }
 
 void CLogButBetter::initRestoreBackupPage()

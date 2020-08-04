@@ -102,6 +102,12 @@ void Button::setText(const std::string& newText)
 {
 	text = newText;
 	drawableText.setString(text);
+
+	// Resets the position
+	drawableText.setOrigin(0, 0);
+	drawableText.setPosition(sf::Vector2f { 0.0f, 0.0f });
+	SET_ORIGIN_CENTER(drawableText);
+	drawableText.setPosition((sf::Vector2f) centrePosition);
 }
 
 const std::string& Button::getText()
