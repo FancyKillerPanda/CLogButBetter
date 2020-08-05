@@ -53,6 +53,7 @@ enum class ProgramState
 	LoginPage,
 	AddItemPage,
 	RemoveItemPage,
+	CreateBackupPage,
 	RestoreBackupPage,
 };
 
@@ -90,10 +91,11 @@ private:
 	sf::Text quantityOrderedText;
 	TextBox* quantityOrderedTextbox = nullptr;
 
-	// Restore backup page
+	// Create/restore backup pages
+	Button* createBackupButton = nullptr;
+	Button* restoreBackupButton = nullptr;
 	sf::Text itemDatabaseFilepathText;
 	sf::Text cadetDatabaseFilepathText;
-	Button* restoreButton = nullptr;
 	TextBox* cadetRestoreFilepathTextbox = nullptr;
 	TextBox* itemRestoreFilepathTextbox = nullptr;
 
@@ -121,7 +123,7 @@ private:
 	void initManagePage();
 	void initLoginPage();
 	void initAddRemoveItemPages();
-	void initRestoreBackupPage();
+	void initBackupPages();
 
 	void drawCadetDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine);
 	void drawItemDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine);

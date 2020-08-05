@@ -41,7 +41,7 @@ CLogButBetter::CLogButBetter()
 	initManagePage();
 	initLoginPage();
 	initAddRemoveItemPages();
-	initRestoreBackupPage();
+	initBackupPages();
 
 	backButton = new Button(font, "<--",
 							sf::Vector2i { WINDOW_WIDTH * 5 / 100, WINDOW_HEIGHT * 5 / 100},
@@ -104,10 +104,15 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			typeSelectionMenu->handleMouseMove(mousePos);
 			removeButton->handleMouseMove(mousePos);
 		} break;
+
+		case ProgramState::CreateBackupPage:
+		{
+			createBackupButton->handleMouseMove(mousePos);
+		} break;
 		
 		case ProgramState::RestoreBackupPage:
 		{
-			restoreButton->handleMouseMove(mousePos);
+			restoreBackupButton->handleMouseMove(mousePos);
 		} break;
 
 		default:
@@ -160,9 +165,14 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			removeButton->handleMouseDown(mousePos);
 		} break;
 		
+		case ProgramState::CreateBackupPage:
+		{
+			createBackupButton->handleMouseDown(mousePos);
+		} break;
+		
 		case ProgramState::RestoreBackupPage:
 		{
-			restoreButton->handleMouseDown(mousePos);
+			restoreBackupButton->handleMouseDown(mousePos);
 		} break;
 
 		default:
@@ -255,6 +265,11 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 						programState = ProgramState::RemoveItemPage;
 					} break;
 
+					case CREATE_BACKUP_BUTTON:
+					{
+						programState = ProgramState::CreateBackupPage;
+					} break;
+					
 					case RESTORE_BACKUP_BUTTON:
 					{
 						programState = ProgramState::RestoreBackupPage;
@@ -282,12 +297,29 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			}
 		}
 
+		case ProgramState::CreateBackupPage:
+		{
+			cadetRestoreFilepathTextbox->handleMouseUp(mousePos);
+			itemRestoreFilepathTextbox->handleMouseUp(mousePos);
+
+			if (createBackupButton->handleMouseUp() &&
+				cadetRestoreFilepathTextbox->getText() != "" &&
+				itemRestoreFilepathTextbox->getText() != "")
+			{
+				writeCadetsToFile(cadetRestoreFilepathTextbox->getText());
+				writeItemsToFile(itemRestoreFilepathTextbox->getText());
+
+				cadetRestoreFilepathTextbox->reset();
+				itemRestoreFilepathTextbox->reset();
+			}
+		} break;
+
 		case ProgramState::RestoreBackupPage:
 		{
 			cadetRestoreFilepathTextbox->handleMouseUp(mousePos);
 			itemRestoreFilepathTextbox->handleMouseUp(mousePos);
 
-			if (restoreButton->handleMouseUp() &&
+			if (restoreBackupButton->handleMouseUp() &&
 				cadetRestoreFilepathTextbox->getText() != "" &&
 				itemRestoreFilepathTextbox->getText() != "")
 			{
@@ -298,6 +330,9 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 				writeCadetsToFile(cadetDatabaseFilepath);
 				writeItemsToFile(itemDatabaseFilepath);
 
+				cadetRestoreFilepathTextbox->reset();
+				itemRestoreFilepathTextbox->reset();
+				
 				programState = ProgramState::ManagePage;
 			}
 		} break;
@@ -418,6 +453,7 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			passwordTextbox->handleTextInput(event);
 		} break;
 
+		case ProgramState::CreateBackupPage:
 		case ProgramState::RestoreBackupPage:
 		{
 			cadetRestoreFilepathTextbox->handleTextInput(event);
@@ -538,9 +574,18 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 		quantityOrderedTextbox->draw(target);
 	} break;
 
+	case ProgramState::CreateBackupPage:
 	case ProgramState::RestoreBackupPage:
 	{
-		restoreButton->draw(target);
+		if (programState == ProgramState::CreateBackupPage)
+		{
+			createBackupButton->draw(target);
+		}
+		else if (programState == ProgramState::RestoreBackupPage)
+		{
+			restoreBackupButton->draw(target);
+		}
+		
 		cadetRestoreFilepathTextbox->draw(target);
 		itemRestoreFilepathTextbox->draw(target);
 		target.draw(cadetDatabaseFilepathText);
@@ -698,11 +743,15 @@ void CLogButBetter::initAddRemoveItemPages()
 	quantityOrderedTextbox->setNumbersOnly(true);
 }
 
-void CLogButBetter::initRestoreBackupPage()
+void CLogButBetter::initBackupPages()
 {
-	restoreButton = new Button(font, "Restore",
-							   sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 70 / 100 },
-							   sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 5 / 100 });
+	restoreBackupButton = new Button(font, "Restore",
+									 sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 70 / 100 },
+									 sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 5 / 100 });
+
+	createBackupButton = new Button(font, "Create",
+									sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 70 / 100 },
+									sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 5 / 100 });
 
 	cadetDatabaseFilepathText = sf::Text { "Cadet Database File Path:", font, 24 };
 	cadetDatabaseFilepathText.setFillColor(sf::Color::Black);
