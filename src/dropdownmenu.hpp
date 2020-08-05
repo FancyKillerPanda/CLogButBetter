@@ -28,6 +28,9 @@ public:
 	void handleMouseDown(sf::Vector2i& mousePos);
 	void handleMouseUp();
 	void draw(sf::RenderTarget& target);
+
+	int getSelectedEntry() { return entrySelected; }
+	Button* getSelectedButton() { return selectedEntryButton; };
 };
 
 #endif

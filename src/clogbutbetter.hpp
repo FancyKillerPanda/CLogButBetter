@@ -128,6 +128,8 @@ private:
 	void readCadetsFromFile();
 	void writeItemsToFile();
 	void readItemsFromFile();
+
+	std::pair<int, int> parseSizeFromString(ItemType type, const std::string& string);
 };
 
 

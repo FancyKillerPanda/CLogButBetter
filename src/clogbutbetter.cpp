@@ -5,6 +5,10 @@
 #include <sstream>
 #include <assert.h>
 
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
 #include "clogbutbetter.hpp"
 
 CLogButBetter::CLogButBetter()
@@ -285,7 +289,43 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 
 			if (addButton->handleMouseUp())
 			{
-				// TODO(fkp): Add
+				if (typeSelectionMenu->getSelectedEntry() != -1 &&
+					sizeTextbox->getText() != "" &&
+					quantityTextbox->getText() != "" &&
+					quantityOrderedTextbox->getText() != "")
+				{
+					ItemType type = getItemTypeFromString(typeSelectionMenu->getSelectedButton()->getText());
+					auto [size, subsize] = parseSizeFromString(type, sizeTextbox->getText());
+					bool found = false;
+
+					for (ItemGroup& item : itemDatabase)
+					{
+						if (item.type == type && item.size == size && item.subsize == subsize)
+						{
+							item.quantity += std::stoi(quantityTextbox->getText());
+							item.quantityOnOrder += std::stoi(quantityOrderedTextbox->getText());
+							
+							found = true;
+							break;
+						}
+					}
+
+					if (!found)
+					{
+						ItemGroup group;
+						group.type = type;
+						group.size = size;
+						group.subsize = subsize;
+						group.quantity = std::stoi(quantityTextbox->getText());
+						group.quantityOnOrder = std::stoi(quantityOrderedTextbox->getText());
+
+						itemDatabase.emplace_back(std::move(group));
+					}
+				}
+				else
+				{
+					MessageBox(nullptr, "Please fill all details.", nullptr, MB_OK);
+				}
 			}
 			
 			sizeTextbox->handleMouseUp(mousePos);
@@ -925,4 +965,79 @@ void CLogButBetter::writeItemsToFile()
 		
 		file << "\n";
 	}
+}
+
+std::pair<int, int> CLogButBetter::parseSizeFromString(ItemType type, const std::string& string)
+{
+	int size = -1;
+	int subsize = -1;
+	
+	switch (type)
+	{
+	case ItemType::SD_LongSleeve:
+	{
+		size = std::stoi(string.substr(0, string.find_first_of("/")));
+		subsize = std::stoi(string.substr(string.find_first_of("/") + 1));
+	} return std::make_pair(size, subsize);
+
+	case ItemType::SD_Trousers:
+	case ItemType::DPU_Pants:
+	{
+		size = std::stoi(string.substr(0, string.size() - 1));
+		subsize = 0;
+
+		switch (string.back())
+		{
+		case 'S': subsize = 0; break;
+		case 'R': subsize = 1; break;
+		case 'L': subsize = 2; break;
+		default: printf("Error: Subsize not valid.\n");
+		}
+	} return std::make_pair(size, subsize);
+
+	case ItemType::SD_Jumper:
+	case ItemType::DPU_Jumper:
+	{
+		size = std::stoi(string.substr(0, string.find_first_of("-")));
+		subsize = std::stoi(string.substr(string.find_first_of("-") + 1));
+	} return std::make_pair(size, subsize);
+	
+	case ItemType::RankSlide:
+	{
+		size = 0;
+
+		if (string == "CDT") size = 0;
+		else if (string == "LCDT") size = 1;
+		else if (string == "CCPL") size = 2;
+		else if (string == "CSGT") size = 3;
+		else if (string == "CFSGT") size = 4;
+		else if (string == "CWOFF") size = 5;
+		else if (string == "CUO") size = 6;
+		else if (string == "A/CCPL") size = 7;
+		else
+		{
+			printf("Error: Unknown rank.\n");
+		}
+	} return std::make_pair(size, -1);
+	
+	case ItemType::SD_ShortSleeve:
+	case ItemType::SD_Shoes:
+	case ItemType::DPU_Shirt:
+	case ItemType::DPU_Boots:
+	case ItemType::Hat_HFFK:
+	case ItemType::Hat_Puggaree:
+	{
+	} return std::make_pair(std::stoi(string), -1);
+
+	case ItemType::SD_Belt:
+	case ItemType::Hat_Badge:
+	case ItemType::Hat_Bush:
+	case ItemType::Webbing:
+	case ItemType::Japara:
+	{
+	} return std::make_pair(-1, -1);
+	}
+
+	assert(false);
+	return std::make_pair(-1, -1);
 }
