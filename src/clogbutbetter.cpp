@@ -40,7 +40,7 @@ CLogButBetter::CLogButBetter()
 	initHomePage();
 	initManagePage();
 	initLoginPage();
-	initAddItemPage();
+	initAddRemoveItemPages();
 	initRestoreBackupPage();
 
 	backButton = new Button(font, "<--",
@@ -99,6 +99,12 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			addButton->handleMouseMove(mousePos);
 		} break;
 
+		case ProgramState::RemoveItemPage:
+		{
+			typeSelectionMenu->handleMouseMove(mousePos);
+			removeButton->handleMouseMove(mousePos);
+		} break;
+		
 		case ProgramState::RestoreBackupPage:
 		{
 			restoreButton->handleMouseMove(mousePos);
@@ -148,6 +154,12 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			addButton->handleMouseDown(mousePos);
 		} break;
 
+		case ProgramState::RemoveItemPage:
+		{
+			typeSelectionMenu->handleMouseDown(mousePos);
+			removeButton->handleMouseDown(mousePos);
+		} break;
+		
 		case ProgramState::RestoreBackupPage:
 		{
 			restoreButton->handleMouseDown(mousePos);
@@ -238,6 +250,11 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 						programState = ProgramState::AddItemPage;
 					} break;
 
+					case REMOVE_ITEM_BUTTON:
+					{
+						programState = ProgramState::RemoveItemPage;
+					} break;
+
 					case RESTORE_BACKUP_BUTTON:
 					{
 						programState = ProgramState::RestoreBackupPage;
@@ -284,10 +301,12 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 		} break;
 
 		case ProgramState::AddItemPage:
+		case ProgramState::RemoveItemPage:
 		{
 			typeSelectionMenu->handleMouseUp();
 
-			if (addButton->handleMouseUp())
+			if ((programState == ProgramState::AddItemPage && addButton->handleMouseUp()) ||
+				(programState == ProgramState::RemoveItemPage && removeButton->handleMouseUp()))
 			{
 				if (typeSelectionMenu->getSelectedEntry() != -1 &&
 					sizeTextbox->getText() != "" &&
@@ -300,10 +319,38 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 
 					for (ItemGroup& item : itemDatabase)
 					{
-						if (item.type == type && item.size == size && item.subsize == subsize)
+						if (item.type == type &&
+							item.size == size &&
+							(item.subsize == -1 || item.subsize == subsize))
 						{
-							item.quantity += std::stoi(quantityTextbox->getText());
-							item.quantityOnOrder += std::stoi(quantityOrderedTextbox->getText());
+							if (programState == ProgramState::AddItemPage)
+							{
+								item.quantity += std::stoi(quantityTextbox->getText());
+								item.quantityOnOrder += std::stoi(quantityOrderedTextbox->getText());
+							}
+							else if (programState == ProgramState::RemoveItemPage)
+							{
+								unsigned int amountToRemove = std::stoi(quantityTextbox->getText());
+								unsigned int amountToRemoveOrder = std::stoi(quantityOrderedTextbox->getText());
+								
+								if (amountToRemove > item.quantity)
+								{
+									item.quantity = 0;
+								}
+								else
+								{
+									item.quantity -= amountToRemove;
+								}
+								
+								if (amountToRemoveOrder > item.quantityOnOrder)
+								{
+									item.quantityOnOrder = 0;
+								}
+								else
+								{
+									item.quantityOnOrder -= amountToRemoveOrder;
+								}
+							}
 							
 							found = true;
 							break;
@@ -312,14 +359,21 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 
 					if (!found)
 					{
-						ItemGroup group;
-						group.type = type;
-						group.size = size;
-						group.subsize = subsize;
-						group.quantity = std::stoi(quantityTextbox->getText());
-						group.quantityOnOrder = std::stoi(quantityOrderedTextbox->getText());
+						if (programState == ProgramState::AddItemPage)
+						{
+							ItemGroup group;
+							group.type = type;
+							group.size = size;
+							group.subsize = subsize;
+							group.quantity = std::stoi(quantityTextbox->getText());
+							group.quantityOnOrder = std::stoi(quantityOrderedTextbox->getText());
 
-						itemDatabase.emplace_back(std::move(group));
+							itemDatabase.emplace_back(std::move(group));
+						}
+						else
+						{
+							MessageBox(nullptr, "Item to remove not found.", nullptr, MB_OK);
+						}
 					}
 
 					typeSelectionMenu->reset();
@@ -369,6 +423,7 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 		} break;
 
 		case ProgramState::AddItemPage:
+		case ProgramState::RemoveItemPage:
 		{
 			sizeTextbox->handleTextInput(event);
 			quantityTextbox->handleTextInput(event);
@@ -459,8 +514,17 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 	} break;
 
 	case ProgramState::AddItemPage:
+	case ProgramState::RemoveItemPage:
 	{
-		addButton->draw(target);
+		if (programState == ProgramState::AddItemPage)
+		{
+			addButton->draw(target);
+		}
+		else if (programState == ProgramState::RemoveItemPage)
+		{
+			removeButton->draw(target);
+		}
+		
 		typeSelectionMenu->draw(target);
 
 		target.draw(sizeText);
@@ -580,11 +644,15 @@ void CLogButBetter::initLoginPage()
 							 sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 5 / 100 });
 }
 
-void CLogButBetter::initAddItemPage()
+void CLogButBetter::initAddRemoveItemPages()
 {
 	addButton = new Button(font, "Add",
 						   sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 60 / 100 },
 						   sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 10 / 100 });
+	
+	removeButton = new Button(font, "Remove",
+							  sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 60 / 100 },
+							  sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 10 / 100 });
 	
 	typeSelectionMenu = new DropDownMenu(font, "Type?", { "LSSD Shirt", "SSSD Shirt",
 														  "SD Trousers", "SD Jumper",

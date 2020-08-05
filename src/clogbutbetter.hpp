@@ -52,6 +52,7 @@ enum class ProgramState
 	ManagePage,
 	LoginPage,
 	AddItemPage,
+	RemoveItemPage,
 	RestoreBackupPage,
 };
 
@@ -78,8 +79,9 @@ private:
 	TextBox* passwordTextbox = nullptr;
 	Button* loginButton = nullptr;
 
-	// Add item page
+	// Add/remove item pages
 	Button* addButton = nullptr;
+	Button* removeButton = nullptr;
 	DropDownMenu* typeSelectionMenu = nullptr;
 	sf::Text sizeText;
 	TextBox* sizeTextbox = nullptr;
@@ -118,7 +120,7 @@ private:
 	void initHomePage();
 	void initManagePage();
 	void initLoginPage();
-	void initAddItemPage();
+	void initAddRemoveItemPages();
 	void initRestoreBackupPage();
 
 	void drawCadetDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine);
