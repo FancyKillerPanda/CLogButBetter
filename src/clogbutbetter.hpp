@@ -117,25 +117,6 @@ private:
 
 	// Get sizes page
 	Button* calculateSizesButton = nullptr;
-	/*
-	sf::Text chestSizeText;
-	TextBox* chestSizeTextbox = nullptr;
-	sf::Text headSizeText;
-	TextBox* headSizeTextbox = nullptr;
-	sf::Text neckSizeText;
-	TextBox* neckSizeTextbox = nullptr;
-	sf::Text sleeveSizeText;
-	TextBox* sleeveSizeTextbox = nullptr;
-	sf::Text waistSizeText;
-	TextBox* waistSizeTextbox = nullptr;
-	sf::Text inseamSizeText;
-	TextBox* inseamSizeTextbox = nullptr;
-	sf::Text heightSizeText;
-	TextBox* heightSizeTextbox = nullptr;
-	sf::Text shoeSizeText;
-	TextBox* shoeSizeTextbox = nullptr;
-	*/
-
 	std::vector<sf::Text> getSizesPageTexts;
 	std::vector<TextBox> getSizesPageTextboxes;
 

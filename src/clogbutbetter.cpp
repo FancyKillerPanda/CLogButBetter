@@ -819,17 +819,14 @@ void CLogButBetter::initBackupPages()
 
 void CLogButBetter::initGetSizesPage()
 {
-#define CENTER_X(value) value - (getSizesPageTexts.back().getGlobalBounds().width / 2)
-#define CENTER_Y(value) value - (getSizesPageTexts.back().getGlobalBounds().height / 2)
-	
-	calculateSizesButton = new Button(font, "<Calculate>",
-									  sf::Vector2i { WINDOW_WIDTH * 70 / 100, WINDOW_HEIGHT * 50 / 100},
+	calculateSizesButton = new Button(font, "Calculate",
+									  sf::Vector2i { WINDOW_WIDTH * 75 / 100, WINDOW_HEIGHT * 50 / 100},
 									  sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_WIDTH * 5 / 100 });
 	
 	getSizesPageTexts.emplace_back("Chest (cm):", font, 24);
 	getSizesPageTexts.back().setFillColor(sf::Color::Black);
-	getSizesPageTexts.back().setPosition(CENTER_X(WINDOW_WIDTH * 15 / 100),
-										 CENTER_Y(WINDOW_HEIGHT * 15 / 100));
+	SET_ORIGIN_CENTER(getSizesPageTexts.back());
+	getSizesPageTexts.back().setPosition(WINDOW_WIDTH * 15 / 100, WINDOW_HEIGHT * 15 / 100);
 
 	getSizesPageTextboxes.emplace_back(font,
 									   sf::Vector2i { WINDOW_WIDTH * 40 / 100, WINDOW_HEIGHT * 15 / 100 },
@@ -839,8 +836,8 @@ void CLogButBetter::initGetSizesPage()
 	
 	getSizesPageTexts.emplace_back("Head (cm):", font, 24);
 	getSizesPageTexts.back().setFillColor(sf::Color::Black);
-	getSizesPageTexts.back().setPosition(CENTER_X(WINDOW_WIDTH * 15 / 100),
-										 CENTER_Y(WINDOW_HEIGHT * 25 / 100));
+	SET_ORIGIN_CENTER(getSizesPageTexts.back());
+	getSizesPageTexts.back().setPosition(WINDOW_WIDTH * 15 / 100, WINDOW_HEIGHT * 25 / 100);
 
 	getSizesPageTextboxes.emplace_back(font,
 									   sf::Vector2i { WINDOW_WIDTH * 40 / 100, WINDOW_HEIGHT * 25 / 100 },
@@ -849,8 +846,8 @@ void CLogButBetter::initGetSizesPage()
 
 	getSizesPageTexts.emplace_back("Neck (cm):", font, 24);
 	getSizesPageTexts.back().setFillColor(sf::Color::Black);
-	getSizesPageTexts.back().setPosition(CENTER_X(WINDOW_WIDTH * 15 / 100),
-										 CENTER_Y(WINDOW_HEIGHT * 35 / 100));
+	SET_ORIGIN_CENTER(getSizesPageTexts.back());
+	getSizesPageTexts.back().setPosition(WINDOW_WIDTH * 15 / 100, WINDOW_HEIGHT * 35 / 100);
 
 	getSizesPageTextboxes.emplace_back(font,
 									   sf::Vector2i { WINDOW_WIDTH * 40 / 100, WINDOW_HEIGHT * 35 / 100 },
@@ -859,8 +856,8 @@ void CLogButBetter::initGetSizesPage()
 
 	getSizesPageTexts.emplace_back("Sleeve (cm):", font, 24);
 	getSizesPageTexts.back().setFillColor(sf::Color::Black);
-	getSizesPageTexts.back().setPosition(CENTER_X(WINDOW_WIDTH * 15 / 100),
-										 CENTER_Y(WINDOW_HEIGHT * 45 / 100));
+	SET_ORIGIN_CENTER(getSizesPageTexts.back());
+	getSizesPageTexts.back().setPosition(WINDOW_WIDTH * 15 / 100, WINDOW_HEIGHT * 45 / 100);
 
 	getSizesPageTextboxes.emplace_back(font,
 									   sf::Vector2i { WINDOW_WIDTH * 40 / 100, WINDOW_HEIGHT * 45 / 100 },
@@ -869,8 +866,8 @@ void CLogButBetter::initGetSizesPage()
 
 	getSizesPageTexts.emplace_back("Waist (cm):", font, 24);
 	getSizesPageTexts.back().setFillColor(sf::Color::Black);
-	getSizesPageTexts.back().setPosition(CENTER_X(WINDOW_WIDTH * 15 / 100),
-										 CENTER_Y(WINDOW_HEIGHT * 55 / 100));
+	SET_ORIGIN_CENTER(getSizesPageTexts.back());
+	getSizesPageTexts.back().setPosition(WINDOW_WIDTH * 15 / 100, WINDOW_HEIGHT * 55 / 100);
 
 	getSizesPageTextboxes.emplace_back(font,
 									   sf::Vector2i { WINDOW_WIDTH * 40 / 100, WINDOW_HEIGHT * 55 / 100 },
@@ -879,8 +876,8 @@ void CLogButBetter::initGetSizesPage()
 
 	getSizesPageTexts.emplace_back("Inseam (cm):", font, 24);
 	getSizesPageTexts.back().setFillColor(sf::Color::Black);
-	getSizesPageTexts.back().setPosition(CENTER_X(WINDOW_WIDTH * 15 / 100),
-										 CENTER_Y(WINDOW_HEIGHT * 65 / 100));
+	SET_ORIGIN_CENTER(getSizesPageTexts.back());
+	getSizesPageTexts.back().setPosition(WINDOW_WIDTH * 15 / 100, WINDOW_HEIGHT * 65 / 100);
 
 	getSizesPageTextboxes.emplace_back(font,
 									   sf::Vector2i { WINDOW_WIDTH * 40 / 100, WINDOW_HEIGHT * 65 / 100 },
@@ -889,8 +886,8 @@ void CLogButBetter::initGetSizesPage()
 
 	getSizesPageTexts.emplace_back("Height (cm):", font, 24);
 	getSizesPageTexts.back().setFillColor(sf::Color::Black);
-	getSizesPageTexts.back().setPosition(CENTER_X(WINDOW_WIDTH * 15 / 100),
-										 CENTER_Y(WINDOW_HEIGHT * 75 / 100));
+	SET_ORIGIN_CENTER(getSizesPageTexts.back());
+	getSizesPageTexts.back().setPosition(WINDOW_WIDTH * 15 / 100, WINDOW_HEIGHT * 75 / 100);
 
 	getSizesPageTextboxes.emplace_back(font,
 									   sf::Vector2i { WINDOW_WIDTH * 40 / 100, WINDOW_HEIGHT * 75 / 100 },
@@ -899,8 +896,8 @@ void CLogButBetter::initGetSizesPage()
 
 	getSizesPageTexts.emplace_back("Shoe Size:", font, 24);
 	getSizesPageTexts.back().setFillColor(sf::Color::Black);
-	getSizesPageTexts.back().setPosition(CENTER_X(WINDOW_WIDTH * 15 / 100),
-										 CENTER_Y(WINDOW_HEIGHT * 85 / 100));
+	SET_ORIGIN_CENTER(getSizesPageTexts.back());
+	getSizesPageTexts.back().setPosition(WINDOW_WIDTH * 15 / 100, WINDOW_HEIGHT * 85 / 100);
 
 	getSizesPageTextboxes.emplace_back(font,
 									   sf::Vector2i { WINDOW_WIDTH * 40 / 100, WINDOW_HEIGHT * 85 / 100 },
