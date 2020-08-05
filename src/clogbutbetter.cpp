@@ -474,8 +474,9 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 					
 					std::string lssdShirtSize = textboxes[NECK_SIZE_INDEX].getText() + "/" + textboxes[SLEEVE_SIZE_INDEX].getText();
 					std::string sssdShirtSize = textboxes[NECK_SIZE_INDEX].getText();
-					// TODO(fkp): SD Trousers subsize (S, R, L)
-					// std::string sdTrousersSize = std::to_string(roundUp(std::stoi(textboxes[WAIST_SIZE_INDEX].getText()), 5));
+
+					// TODO(fkp): Proper SD Trousers subsize (S, R, L)
+					std::string sdTrousersSize = std::to_string(roundUp(std::stoi(textboxes[WAIST_SIZE_INDEX].getText()), 5)) + "R";
 
 					std::string jumperSize;
 					int jumperMeasurement = std::stoi(textboxes[CHEST_SIZE_INDEX].getText());

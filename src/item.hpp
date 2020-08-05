@@ -5,6 +5,9 @@
 
 #include <string>
 
+/*
+ * Represents the type of the uniform item.
+ */
 enum class ItemType
 {
 	SD_LongSleeve,
@@ -29,9 +32,16 @@ enum class ItemType
 	Japara,
 };
 
-struct ItemGroup
-{
-	ItemType type;
+/*
+ * Holds all information about one unique item "type", which is
+ * uniquely identified by its actual type and its size (and subsize if it
+ * exists).
+
+ * This structure also contains information about the number of items
+ * currently in the group, as well as the number of items that have
+ * been ordered. There is a field for notes about this item group.
+ */
+struct ItemGroup { ItemType type;
 	
 	int size;
 	int subsize = -1;
@@ -42,7 +52,21 @@ struct ItemGroup
 	std::string notes;
 };
 
+/*
+ * Returns the string representation for each item type.
+ *
+ * Input: the type of item
+ * Output: a string representing the item type
+ */
 std::string getStringFromItemType(ItemType itemType);
+
+/*
+ * Returns the item type that a particular string represents. It is
+ * essentially the opposite of the above function.
+ *
+ * Input: a string representing the item type
+ * Output: the type of item
+ */
 ItemType getItemTypeFromString(const std::string& itemString);
 
 #endif
