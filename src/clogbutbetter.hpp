@@ -126,10 +126,10 @@ private:
 	void drawCadetDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine);
 	void drawItemDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine);
 	
-	void writeCadetsToFile();
-	void readCadetsFromFile();
-	void writeItemsToFile();
-	void readItemsFromFile();
+	void writeCadetsToFile(const std::string& filepath);
+	void readCadetsFromFile(const std::string& filepath);
+	void writeItemsToFile(const std::string& filepath);
+	void readItemsFromFile(const std::string& filepath);
 
 	std::pair<int, int> parseSizeFromString(ItemType type, const std::string& string);
 };

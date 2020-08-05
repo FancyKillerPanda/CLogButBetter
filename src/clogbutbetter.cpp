@@ -34,8 +34,8 @@ CLogButBetter::CLogButBetter()
 	laurelSpriteRight.setScale(sf::Vector2f { 0.25f, 0.25f });
 	laurelSpriteRight.setPosition(WINDOW_WIDTH * 85 / 100, WINDOW_HEIGHT * 80 / 100);
 	
-	readCadetsFromFile();
-	readItemsFromFile();
+	readCadetsFromFile(cadetDatabaseFilepath);
+	readItemsFromFile(itemDatabaseFilepath);
 	
 	initHomePage();
 	initManagePage();
@@ -291,10 +291,12 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 				cadetRestoreFilepathTextbox->getText() != "" &&
 				itemRestoreFilepathTextbox->getText() != "")
 			{
-				cadetDatabaseFilepath = cadetRestoreFilepathTextbox->getText();
-				readCadetsFromFile();
-				itemDatabaseFilepath = itemRestoreFilepathTextbox->getText();
-				readItemsFromFile();
+				readCadetsFromFile(cadetRestoreFilepathTextbox->getText());
+				readItemsFromFile(itemRestoreFilepathTextbox->getText());
+
+				// Overwrites the normal database files so future instances will read it
+				writeCadetsToFile(cadetDatabaseFilepath);
+				writeItemsToFile(itemDatabaseFilepath);
 
 				programState = ProgramState::ManagePage;
 			}
@@ -911,10 +913,10 @@ void CLogButBetter::drawItemDatabase(sf::RenderTarget& target, sf::RectangleShap
 	name = std::stoi(nameStr);
 
 // NOTE(fkp): Volatile - must stay in sync with writeCadetsToFile()
-void CLogButBetter::readCadetsFromFile()
+void CLogButBetter::readCadetsFromFile(const std::string& filepath)
 {
 	std::string lineStr;
-	std::ifstream file { cadetDatabaseFilepath };
+	std::ifstream file { filepath };
 
 	if (!file)
 	{
@@ -948,10 +950,10 @@ void CLogButBetter::readCadetsFromFile()
 }
 
 // NOTE(fkp): Volatile - must stay in sync with readCadetsFromFile()
-void CLogButBetter::writeCadetsToFile()
+void CLogButBetter::writeCadetsToFile(const std::string& filepath)
 {
 	std::string line;
-	std::ofstream file { cadetDatabaseFilepath };
+	std::ofstream file { filepath };
 
 	if (!file)
 	{
@@ -971,10 +973,10 @@ void CLogButBetter::writeCadetsToFile()
 }
 
 // NOTE(fkp): Volatile - must stay in sync with writeItemsToFile()
-void CLogButBetter::readItemsFromFile()
+void CLogButBetter::readItemsFromFile(const std::string& filepath)
 {
 	std::string lineStr;
-	std::ifstream file { itemDatabaseFilepath };
+	std::ifstream file { filepath };
 
 	if (!file)
 	{
@@ -1016,10 +1018,10 @@ void CLogButBetter::readItemsFromFile()
 }
 
 // NOTE(fkp): Volatile - must stay in sync with readItemsFromFile()
-void CLogButBetter::writeItemsToFile()
+void CLogButBetter::writeItemsToFile(const std::string& filepath)
 {
 	std::string line;
-	std::ofstream file { itemDatabaseFilepath };
+	std::ofstream file { filepath };
 
 	if (!file)
 	{
