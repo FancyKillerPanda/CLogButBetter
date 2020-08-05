@@ -24,6 +24,8 @@ private:
 public:
 	DropDownMenu(const sf::Font& font, const std::string& defaultText, const std::vector<std::string>& entryTexts, sf::Vector2i centrePosition);
 
+	void reset();
+	
 	void handleMouseMove(sf::Vector2i& mousePos);
 	void handleMouseDown(sf::Vector2i& mousePos);
 	void handleMouseUp();

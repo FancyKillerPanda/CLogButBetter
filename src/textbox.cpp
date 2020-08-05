@@ -16,6 +16,12 @@ TextBox::TextBox(const sf::Font& font, sf::Vector2i centrePosition, sf::Vector2i
 	drawableText.setPosition(backgroundShape.getGlobalBounds().left + 2, backgroundShape.getGlobalBounds().top);
 }
 
+void TextBox::reset()
+{
+	displayedText = "";
+	drawableText.setString(displayedText);
+}
+
 void TextBox::handleMouseUp(sf::Vector2i& mousePos)
 {
 	bool mouseOverTextBox = backgroundShape.getGlobalBounds().contains((sf::Vector2f) mousePos);

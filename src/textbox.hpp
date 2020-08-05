@@ -24,6 +24,8 @@ private:
 public:
 	TextBox(const sf::Font& font, sf::Vector2i centrePosition, sf::Vector2i size);
 
+	void reset();
+	
 	void handleMouseUp(sf::Vector2i& mousePos);
 	void handleTextInput(sf::Event& event);
 	void draw(sf::RenderTarget& target);
@@ -31,6 +33,7 @@ public:
 	void setActive(bool value);
 	void setSecret(bool value);
 	void setNumbersOnly(bool value);
+
 	const std::string& getText();
 };
 

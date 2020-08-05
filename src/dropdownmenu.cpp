@@ -21,6 +21,13 @@ DropDownMenu::DropDownMenu(const sf::Font& font, const std::string& defaultText,
 	}
 }
 
+void DropDownMenu::reset()
+{
+	entrySelected = -1;
+	selectedEntryButton->setText(defaultText);
+	isExpanded = false;
+}
+
 void DropDownMenu::handleMouseMove(sf::Vector2i& mousePos)
 {
 	if (isExpanded)

@@ -321,6 +321,11 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 
 						itemDatabase.emplace_back(std::move(group));
 					}
+
+					typeSelectionMenu->reset();
+					sizeTextbox->reset();
+					quantityTextbox->reset();
+					quantityOrderedTextbox->reset();
 				}
 				else
 				{
