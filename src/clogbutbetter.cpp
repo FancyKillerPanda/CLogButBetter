@@ -454,7 +454,77 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 
 			if (calculateSizesButton->handleMouseUp())
 			{
-				// TODO(fkp): Calculate the sizes
+				bool filledInCompletely = true;
+				
+				for (TextBox& textbox : getSizesPageTextboxes)
+				{
+					if (textbox.getText() == "")
+					{
+						filledInCompletely = false;
+						MessageBox(nullptr, "Please fill in all the values.", nullptr, MB_OK);
+						
+						break;
+					}
+				}
+
+				if (filledInCompletely)
+				{
+					// For ease of use
+					std::vector<TextBox>& textboxes = getSizesPageTextboxes;
+					
+					std::string lssdShirtSize = textboxes[NECK_SIZE_INDEX].getText() + "/" + textboxes[SLEEVE_SIZE_INDEX].getText();
+					std::string sssdShirtSize = textboxes[NECK_SIZE_INDEX].getText();
+					// TODO(fkp): SD Trousers subsize (S, R, L)
+					// std::string sdTrousersSize = std::to_string(roundUp(std::stoi(textboxes[WAIST_SIZE_INDEX].getText()), 5));
+
+					std::string jumperSize;
+					int jumperMeasurement = std::stoi(textboxes[CHEST_SIZE_INDEX].getText());
+
+					if (jumperMeasurement <= 85)
+					{
+						jumperSize = "75-85";
+					}
+					else if (jumperMeasurement <= 95)
+					{
+						jumperSize = "85-95";
+					}
+					else if (jumperMeasurement <= 105)
+					{
+						jumperSize = "95-105";
+					}
+					else if (jumperMeasurement <= 115)
+					{
+						jumperSize = "105-115";
+					}
+					else if (jumperMeasurement <= 125)
+					{
+						jumperSize = "115-125";
+					}
+					else
+					{
+						MessageBox(nullptr, "Jumper size does not exist.", nullptr, MB_OK);
+					}
+
+					std::string shoeSize = textboxes[SHOE_SIZE_INDEX].getText();
+					std::string hffkSize = textboxes[HEAD_SIZE_INDEX].getText();
+					std::string puggareeSize = hffkSize;
+
+					int headMeasurement = std::stoi(textboxes[HEAD_SIZE_INDEX].getText());
+					std::string bushHatSize;
+
+					if (headMeasurement >= 58)
+					{
+						bushHatSize = "Large";
+					}
+					else if (headMeasurement >= 54)
+					{
+						bushHatSize = "Medium";
+					}
+					else
+					{
+						bushHatSize = "Small";
+					}
+				}
 			}
 		} break;
 
