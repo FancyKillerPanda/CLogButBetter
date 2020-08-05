@@ -42,6 +42,7 @@ CLogButBetter::CLogButBetter()
 	initLoginPage();
 	initAddRemoveItemPages();
 	initBackupPages();
+	initGetSizesPage();
 
 	backButton = new Button(font, "<--",
 							sf::Vector2i { WINDOW_WIDTH * 5 / 100, WINDOW_HEIGHT * 5 / 100},
@@ -115,6 +116,11 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			restoreBackupButton->handleMouseMove(mousePos);
 		} break;
 
+		case ProgramState::GetSizesPage:
+		{
+			calculateSizesButton->handleMouseMove(mousePos);
+		} break;
+
 		default:
 		{
 		} break;
@@ -173,6 +179,11 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 		case ProgramState::RestoreBackupPage:
 		{
 			restoreBackupButton->handleMouseDown(mousePos);
+		} break;
+
+		case ProgramState::GetSizesPage:
+		{
+			calculateSizesButton->handleMouseDown(mousePos);
 		} break;
 
 		default:
@@ -273,6 +284,11 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 					case RESTORE_BACKUP_BUTTON:
 					{
 						programState = ProgramState::RestoreBackupPage;
+					} break;
+
+					case GET_SIZES_BUTTON:
+					{
+						programState = ProgramState::GetSizesPage;
 					} break;
 					}
 				}
@@ -427,6 +443,19 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			sizeTextbox->handleMouseUp(mousePos);
 			quantityTextbox->handleMouseUp(mousePos);
 			quantityOrderedTextbox->handleMouseUp(mousePos);
+		} break;
+
+		case ProgramState::GetSizesPage:
+		{
+			for (TextBox& textbox : getSizesPageTextboxes)
+			{
+				textbox.handleMouseUp(mousePos);
+			}
+
+			if (calculateSizesButton->handleMouseUp())
+			{
+				// TODO(fkp): Calculate the sizes
+			}
 		} break;
 
 		default:
@@ -590,6 +619,21 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 		itemRestoreFilepathTextbox->draw(target);
 		target.draw(cadetDatabaseFilepathText);
 		target.draw(itemDatabaseFilepathText);
+	} break;
+
+	case ProgramState::GetSizesPage:
+	{
+		calculateSizesButton->draw(target);
+		
+		for (sf::Text& text : getSizesPageTexts)
+		{
+			target.draw(text);
+		}
+
+		for (TextBox& textbox : getSizesPageTextboxes)
+		{
+			textbox.draw(target);
+		}
 	} break;
 
 	default:
@@ -771,6 +815,100 @@ void CLogButBetter::initBackupPages()
 	itemRestoreFilepathTextbox = new TextBox(font,
 											 sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 60 / 100 },
 											 sf::Vector2i { WINDOW_WIDTH * 60 / 100, WINDOW_HEIGHT * 5 / 100 });
+}
+
+void CLogButBetter::initGetSizesPage()
+{
+#define CENTER_X(value) value - (getSizesPageTexts.back().getGlobalBounds().width / 2)
+#define CENTER_Y(value) value - (getSizesPageTexts.back().getGlobalBounds().height / 2)
+	
+	calculateSizesButton = new Button(font, "<Calculate>",
+									  sf::Vector2i { WINDOW_WIDTH * 70 / 100, WINDOW_HEIGHT * 50 / 100},
+									  sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_WIDTH * 5 / 100 });
+	
+	getSizesPageTexts.emplace_back("Chest (cm):", font, 24);
+	getSizesPageTexts.back().setFillColor(sf::Color::Black);
+	getSizesPageTexts.back().setPosition(CENTER_X(WINDOW_WIDTH * 15 / 100),
+										 CENTER_Y(WINDOW_HEIGHT * 15 / 100));
+
+	getSizesPageTextboxes.emplace_back(font,
+									   sf::Vector2i { WINDOW_WIDTH * 40 / 100, WINDOW_HEIGHT * 15 / 100 },
+									   sf::Vector2i { WINDOW_WIDTH * 25 / 100, WINDOW_HEIGHT * 5 / 100 });
+	getSizesPageTextboxes.back().setNumbersOnly(true);
+	getSizesPageTextboxes.back().setActive(true);
+	
+	getSizesPageTexts.emplace_back("Head (cm):", font, 24);
+	getSizesPageTexts.back().setFillColor(sf::Color::Black);
+	getSizesPageTexts.back().setPosition(CENTER_X(WINDOW_WIDTH * 15 / 100),
+										 CENTER_Y(WINDOW_HEIGHT * 25 / 100));
+
+	getSizesPageTextboxes.emplace_back(font,
+									   sf::Vector2i { WINDOW_WIDTH * 40 / 100, WINDOW_HEIGHT * 25 / 100 },
+									   sf::Vector2i { WINDOW_WIDTH * 25 / 100, WINDOW_HEIGHT * 5 / 100 });
+	getSizesPageTextboxes.back().setNumbersOnly(true);
+
+	getSizesPageTexts.emplace_back("Neck (cm):", font, 24);
+	getSizesPageTexts.back().setFillColor(sf::Color::Black);
+	getSizesPageTexts.back().setPosition(CENTER_X(WINDOW_WIDTH * 15 / 100),
+										 CENTER_Y(WINDOW_HEIGHT * 35 / 100));
+
+	getSizesPageTextboxes.emplace_back(font,
+									   sf::Vector2i { WINDOW_WIDTH * 40 / 100, WINDOW_HEIGHT * 35 / 100 },
+									   sf::Vector2i { WINDOW_WIDTH * 25 / 100, WINDOW_HEIGHT * 5 / 100 });
+	getSizesPageTextboxes.back().setNumbersOnly(true);
+
+	getSizesPageTexts.emplace_back("Sleeve (cm):", font, 24);
+	getSizesPageTexts.back().setFillColor(sf::Color::Black);
+	getSizesPageTexts.back().setPosition(CENTER_X(WINDOW_WIDTH * 15 / 100),
+										 CENTER_Y(WINDOW_HEIGHT * 45 / 100));
+
+	getSizesPageTextboxes.emplace_back(font,
+									   sf::Vector2i { WINDOW_WIDTH * 40 / 100, WINDOW_HEIGHT * 45 / 100 },
+									   sf::Vector2i { WINDOW_WIDTH * 25 / 100, WINDOW_HEIGHT * 5 / 100 });
+	getSizesPageTextboxes.back().setNumbersOnly(true);
+
+	getSizesPageTexts.emplace_back("Waist (cm):", font, 24);
+	getSizesPageTexts.back().setFillColor(sf::Color::Black);
+	getSizesPageTexts.back().setPosition(CENTER_X(WINDOW_WIDTH * 15 / 100),
+										 CENTER_Y(WINDOW_HEIGHT * 55 / 100));
+
+	getSizesPageTextboxes.emplace_back(font,
+									   sf::Vector2i { WINDOW_WIDTH * 40 / 100, WINDOW_HEIGHT * 55 / 100 },
+									   sf::Vector2i { WINDOW_WIDTH * 25 / 100, WINDOW_HEIGHT * 5 / 100 });
+	getSizesPageTextboxes.back().setNumbersOnly(true);
+
+	getSizesPageTexts.emplace_back("Inseam (cm):", font, 24);
+	getSizesPageTexts.back().setFillColor(sf::Color::Black);
+	getSizesPageTexts.back().setPosition(CENTER_X(WINDOW_WIDTH * 15 / 100),
+										 CENTER_Y(WINDOW_HEIGHT * 65 / 100));
+
+	getSizesPageTextboxes.emplace_back(font,
+									   sf::Vector2i { WINDOW_WIDTH * 40 / 100, WINDOW_HEIGHT * 65 / 100 },
+									   sf::Vector2i { WINDOW_WIDTH * 25 / 100, WINDOW_HEIGHT * 5 / 100 });
+	getSizesPageTextboxes.back().setNumbersOnly(true);
+
+	getSizesPageTexts.emplace_back("Height (cm):", font, 24);
+	getSizesPageTexts.back().setFillColor(sf::Color::Black);
+	getSizesPageTexts.back().setPosition(CENTER_X(WINDOW_WIDTH * 15 / 100),
+										 CENTER_Y(WINDOW_HEIGHT * 75 / 100));
+
+	getSizesPageTextboxes.emplace_back(font,
+									   sf::Vector2i { WINDOW_WIDTH * 40 / 100, WINDOW_HEIGHT * 75 / 100 },
+									   sf::Vector2i { WINDOW_WIDTH * 25 / 100, WINDOW_HEIGHT * 5 / 100 });
+	getSizesPageTextboxes.back().setNumbersOnly(true);
+
+	getSizesPageTexts.emplace_back("Shoe Size:", font, 24);
+	getSizesPageTexts.back().setFillColor(sf::Color::Black);
+	getSizesPageTexts.back().setPosition(CENTER_X(WINDOW_WIDTH * 15 / 100),
+										 CENTER_Y(WINDOW_HEIGHT * 85 / 100));
+
+	getSizesPageTextboxes.emplace_back(font,
+									   sf::Vector2i { WINDOW_WIDTH * 40 / 100, WINDOW_HEIGHT * 85 / 100 },
+									   sf::Vector2i { WINDOW_WIDTH * 25 / 100, WINDOW_HEIGHT * 5 / 100 });
+	getSizesPageTextboxes.back().setNumbersOnly(true);
+
+#undef CENTER_X
+#undef CENTER_Y
 }
 
 void CLogButBetter::drawCadetDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine)

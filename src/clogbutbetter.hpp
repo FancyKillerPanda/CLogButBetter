@@ -42,6 +42,21 @@ enum ManagePageButtonIndex
 	MANAGE_PAGE_BUTTON_COUNT,
 };
 
+enum GetSizesPageIndex
+{
+	CHEST_SIZE_INDEX,
+	HEAD_SIZE_INDEX,
+	NECK_SIZE_INDEX,
+	SLEEVE_SIZE_INDEX,
+	WAIST_SIZE_INDEX,
+	INSEAM_SIZE_INDEX,
+	HEIGHT_SIZE_INDEX,
+	SHOE_SIZE_INDEX,
+
+	// Keep last
+	GET_SIZES_INDEX_COUNT
+};
+
 enum class ProgramState
 {
 	HomePage,
@@ -55,6 +70,7 @@ enum class ProgramState
 	RemoveItemPage,
 	CreateBackupPage,
 	RestoreBackupPage,
+	GetSizesPage,
 };
 
 class CLogButBetter
@@ -99,6 +115,30 @@ private:
 	TextBox* cadetRestoreFilepathTextbox = nullptr;
 	TextBox* itemRestoreFilepathTextbox = nullptr;
 
+	// Get sizes page
+	Button* calculateSizesButton = nullptr;
+	/*
+	sf::Text chestSizeText;
+	TextBox* chestSizeTextbox = nullptr;
+	sf::Text headSizeText;
+	TextBox* headSizeTextbox = nullptr;
+	sf::Text neckSizeText;
+	TextBox* neckSizeTextbox = nullptr;
+	sf::Text sleeveSizeText;
+	TextBox* sleeveSizeTextbox = nullptr;
+	sf::Text waistSizeText;
+	TextBox* waistSizeTextbox = nullptr;
+	sf::Text inseamSizeText;
+	TextBox* inseamSizeTextbox = nullptr;
+	sf::Text heightSizeText;
+	TextBox* heightSizeTextbox = nullptr;
+	sf::Text shoeSizeText;
+	TextBox* shoeSizeTextbox = nullptr;
+	*/
+
+	std::vector<sf::Text> getSizesPageTexts;
+	std::vector<TextBox> getSizesPageTextboxes;
+
 	bool cadetDatabaseIsActive = true;
 	std::string cadetDatabaseFilepath = "res/cadets.csv";
 	std::vector<Cadet> cadetDatabase;
@@ -124,6 +164,7 @@ private:
 	void initLoginPage();
 	void initAddRemoveItemPages();
 	void initBackupPages();
+	void initGetSizesPage();
 
 	void drawCadetDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine);
 	void drawItemDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine);
