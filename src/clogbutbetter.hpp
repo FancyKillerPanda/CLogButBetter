@@ -12,9 +12,13 @@
 #include "item.hpp"
 #include "dropdownmenu.hpp"
 
-// Will be used to access buttons in the vector. Rather than using a
-// plain index, these names help to understand which button is being
-// accessed.
+/*
+ * Holds indices into the vector of buttons on the home page.
+ *
+ * Will be used to access buttons in the vector. Rather than using a
+ * plain index, these names help to understand which button is being
+ * accessed.
+ */
 enum HomePageButtonIndex
 {
 	VIEW_CADETS_BUTTON,
@@ -28,6 +32,9 @@ enum HomePageButtonIndex
 	HOME_PAGE_BUTTON_COUNT,
 };
 
+/*
+ * Holds indices into the vector of buttons on the manage page.
+ */
 enum ManagePageButtonIndex
 {
 	ADD_CADET_BUTTON,
@@ -42,6 +49,9 @@ enum ManagePageButtonIndex
 	MANAGE_PAGE_BUTTON_COUNT,
 };
 
+/*
+ * Holds indices into the vector of UI elements on the get-sizes page.
+ */
 enum GetSizesPageIndex
 {
 	CHEST_SIZE_INDEX,
@@ -57,6 +67,9 @@ enum GetSizesPageIndex
 	GET_SIZES_INDEX_COUNT
 };
 
+/*
+ * Holds the current page that the program is in.
+ */
 enum class ProgramState
 {
 	HomePage,
@@ -73,6 +86,9 @@ enum class ProgramState
 	GetSizesPage,
 };
 
+/*
+ * The main class of the project, this connects everything together.
+ */
 class CLogButBetter
 {
 private:
@@ -120,12 +136,14 @@ private:
 	std::vector<sf::Text> getSizesPageTexts;
 	std::vector<TextBox> getSizesPageTextboxes;
 
+	// The databases holding all cadet and item information
 	bool cadetDatabaseIsActive = true;
 	std::string cadetDatabaseFilepath = "res/cadets.csv";
 	std::vector<Cadet> cadetDatabase;
 	std::string itemDatabaseFilepath = "res/items.csv";
 	std::vector<ItemGroup> itemDatabase;
 
+	// Used to skip the login page when debugging.
 #ifdef NDEBUG
 	bool hasLoggedIn = false;
 #else
@@ -133,13 +151,35 @@ private:
 #endif
 	
 public:
+	/*
+	 * Constructs the object.
+	 */
 	CLogButBetter();
+
+	/*
+	 * Destructs the object.
+	 */
 	~CLogButBetter();
 	
+	/*
+	 * Handles a single event polled from SFML.
+	 * Input: The window that polled the event, the event itself.
+	 */
 	void handleProgramEvent(sf::RenderWindow& window, sf::Event& event);
+
+	/*
+	 * Draws the entire program to the target.
+	 * This method will dispatch to other draw calls.
+	 *
+	 * Input: The target to draw to.
+	 */
 	void drawProgram(sf::RenderTarget& target);
 
 private:
+	/*
+	 * Initialisation helper methods.
+	 * These are called from the constructor of the object.
+	 */
 	void initHomePage();
 	void initManagePage();
 	void initLoginPage();
@@ -147,14 +187,38 @@ private:
 	void initBackupPages();
 	void initGetSizesPage();
 
+	/*
+	 * Draws the database view for cadets and items.
+	 * The reason these are separate methods is that they require different layouts,
+	 * although they do very similar things.
+	 *
+	 * Inputs: The target to draw to, a horizontal line that can be drawn, and a
+	 * vertical line that can be draw.
+	 */
 	void drawCadetDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine);
 	void drawItemDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine);
 	
+	/*
+	 * Writes the databases to files.
+	 * Input: Filepath that the database will be written to.
+	 */
 	void writeCadetsToFile(const std::string& filepath);
-	void readCadetsFromFile(const std::string& filepath);
 	void writeItemsToFile(const std::string& filepath);
+	
+	/*
+	 * Reads the databases from files.
+	 * Input: Filepath that the database will be read from.
+	 */
+	void readCadetsFromFile(const std::string& filepath);
 	void readItemsFromFile(const std::string& filepath);
 
+	/*
+	 * Parses a string representation of a size into its size/subsize components.
+	 *
+	 * Inputs: The type of item the size represents, the string representing the size.
+	 * Output: A pair of integers, the first representing the size of the item, the
+	 * second representing the subsize (if it exists, else -1).
+	 */
 	std::pair<int, int> parseSizeFromString(ItemType type, const std::string& string);
 };
 
