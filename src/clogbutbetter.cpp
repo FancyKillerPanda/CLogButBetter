@@ -515,7 +515,6 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 		} break;
 
 		case ProgramState::AddCadetPage:
-		case ProgramState::RemoveCadetPage:
 		{
 			if (addCadetButton->handleMouseUp())
 			{
@@ -548,6 +547,67 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			nameTextbox->handleMouseUp(mousePos);
 		} break;
 
+		case ProgramState::RemoveCadetPage:
+		{
+			if (removeCadetButton->handleMouseUp())
+			{
+				bool shouldReset = false;
+				
+				if (serviceNumberTextbox->getText() != "")
+				{
+					for (int i = 0; i < cadetDatabase.size();)
+					{
+						Cadet& cadet = cadetDatabase[i];
+						
+						if ((int) cadet.serviceNumber == std::stoi(serviceNumberTextbox->getText()))
+						{
+							cadetDatabase.erase(cadetDatabase.begin() + i);
+							shouldReset = true;
+						}
+						else
+						{
+							i += 1;
+						}
+					}
+				}
+				
+				if (nameTextbox->getText() != "")
+				{
+					for (int i = 0; i < cadetDatabase.size();)
+					{
+						Cadet& cadet = cadetDatabase[i];
+						
+						if (cadet.firstName + " " + cadet.lastName == nameTextbox->getText())
+						{
+							cadetDatabase.erase(cadetDatabase.begin() + i);
+							shouldReset = true;
+						}
+						else
+						{
+							i += 1;
+						}
+					}
+				}
+
+				if (shouldReset)
+				{
+					serviceNumberTextbox->reset();
+					rankTextbox->reset();
+					nameTextbox->reset();
+				}
+				else
+				{
+					MessageBox(nullptr, "No cadet found.", nullptr, MB_OK);
+				}
+			}
+			
+			serviceNumberTextbox->handleMouseUp(mousePos);
+			rankTextbox->handleMouseUp(mousePos);
+			nameTextbox->handleMouseUp(mousePos);
+
+			cadetDatabaseShown = cadetDatabase;
+		} break;
+			
 		case ProgramState::GetSizesPage:
 		{
 			for (TextBox& textbox : getSizesPageTextboxes)
