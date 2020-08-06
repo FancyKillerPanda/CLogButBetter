@@ -362,6 +362,10 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 					hasLoggedIn = true;
 					programState = ProgramState::ManagePage;
 				}
+				else
+				{
+					MessageBox(nullptr, "Your username or password is incorrect.", nullptr, MB_OK);
+				}
 			}
 		}
 
@@ -590,10 +594,6 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 					{
 						bushHatSize = "Small";
 					}
-
-					printf("LSSD: %s, SSSD: %s, DPUS: %s, DPUP: %s\n"
-						   "SDT: %s, Jump: %s, Shoe: %s, HFFK: %s\n"
-						   "Pug: %s, Bush: %s", lssdShirtSize.c_str(), sssdShirtSize.c_str(), dpuShirtSize.c_str(), dpuPantsSize.c_str(), sdTrousersSize.c_str(), jumperSize.c_str(), shoeSize.c_str(), hffkSize.c_str(), puggareeSize.c_str(), bushHatSize.c_str());
 
 					viewSizesPageTexts[0].setString(std::string("LSSD Shirt Size: ") + lssdShirtSize);
 					viewSizesPageTexts[1].setString(std::string("SSSD Shirt Size: ") + sssdShirtSize);
