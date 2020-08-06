@@ -19,6 +19,7 @@ TextBox::TextBox(const sf::Font& font, sf::Vector2i centrePosition, sf::Vector2i
 void TextBox::reset()
 {
 	displayedText = "";
+	textValue = "";
 	drawableText.setString(displayedText);
 }
 

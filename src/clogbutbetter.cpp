@@ -517,7 +517,31 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 		case ProgramState::AddCadetPage:
 		case ProgramState::RemoveCadetPage:
 		{
-			// TODO(fkp): Add the cadet
+			if (addCadetButton->handleMouseUp())
+			{
+				if (serviceNumberTextbox->getText() != "" &&
+					rankTextbox->getText() != "" &&
+					nameTextbox->getText() != "")
+				{
+					Cadet newCadet;
+					newCadet.serviceNumber = std::stoi(serviceNumberTextbox->getText());
+					newCadet.rankAbbrev = rankTextbox->getText();
+					const std::string& fullName = nameTextbox->getText();
+					newCadet.firstName = fullName.substr(0, fullName.find_last_of(" "));
+					newCadet.lastName = fullName.substr(fullName.find_last_of(" ") + 1);
+
+					cadetDatabaseShown.emplace_back(newCadet);
+					cadetDatabase.emplace_back(std::move(newCadet));
+					
+					serviceNumberTextbox->reset();
+					rankTextbox->reset();
+					nameTextbox->reset();
+				}
+				else
+				{
+					MessageBox(nullptr, "Please fill all details.", nullptr, MB_OK);
+				}
+			}
 			
 			serviceNumberTextbox->handleMouseUp(mousePos);
 			rankTextbox->handleMouseUp(mousePos);
