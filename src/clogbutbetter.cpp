@@ -683,6 +683,17 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			if (cadetDatabaseIsActive)
 			{
 				searchTextbox->handleTextInput(event);
+				cadetDatabaseShown.clear();
+				const std::string& query = searchTextbox->getText();
+
+				for (Cadet& cadet : cadetDatabase)
+				{
+					if (cadet.lastName.find(query) != std::string::npos ||
+						cadet.firstName.find(query) != std::string::npos)
+					{
+						cadetDatabaseShown.emplace_back(cadet);
+					}
+				}
 			}
 		} break;
 		}
@@ -1231,7 +1242,7 @@ void CLogButBetter::drawCadetDatabase(sf::RenderTarget& target, sf::RectangleSha
 	currentY += entryText.getCharacterSize() + 3;
 	entryText.setStyle(sf::Text::Regular);
 		
-	for (Cadet& cadet : cadetDatabase)
+	for (Cadet& cadet : cadetDatabaseShown)
 	{
 		entryText.setString(std::to_string(cadet.serviceNumber));
 		entryText.setPosition((float) serviceNumberX, (float) currentY);
@@ -1518,6 +1529,8 @@ void CLogButBetter::readCadetsFromFile(const std::string& filepath)
 			cadetDatabase.back().items.emplace_back(readItemFromStream(line));
 		}
 	}
+
+	cadetDatabaseShown = cadetDatabase;
 }
 
 // NOTE(fkp): Volatile - must stay in sync with readCadetsFromFile()

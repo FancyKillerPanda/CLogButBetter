@@ -165,6 +165,7 @@ private:
 	bool cadetDatabaseIsActive = true;
 	std::string cadetDatabaseFilepath = "res/cadets.csv";
 	std::vector<Cadet> cadetDatabase;
+	std::vector<Cadet> cadetDatabaseShown; // What is displayed, after searching
 	std::string itemDatabaseFilepath = "res/items.csv";
 	std::vector<ItemGroup> itemDatabase;
 
