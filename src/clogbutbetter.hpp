@@ -84,6 +84,7 @@ enum class ProgramState
 	CreateBackupPage,
 	RestoreBackupPage,
 	GetSizesPage,
+	ViewSizesPage,
 };
 
 /*
@@ -131,10 +132,11 @@ private:
 	TextBox* cadetRestoreFilepathTextbox = nullptr;
 	TextBox* itemRestoreFilepathTextbox = nullptr;
 
-	// Get sizes page
+	// Get/view sizes page
 	Button* calculateSizesButton = nullptr;
 	std::vector<sf::Text> getSizesPageTexts;
 	std::vector<TextBox> getSizesPageTextboxes;
+	std::vector<sf::Text> viewSizesPageTexts;
 
 	// The databases holding all cadet and item information
 	bool cadetDatabaseIsActive = true;

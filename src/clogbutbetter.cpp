@@ -532,6 +532,19 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 					printf("LSSD: %s, SSSD: %s, DPUS: %s, DPUP: %s\n"
 						   "SDT: %s, Jump: %s, Shoe: %s, HFFK: %s\n"
 						   "Pug: %s, Bush: %s", lssdShirtSize.c_str(), sssdShirtSize.c_str(), dpuShirtSize.c_str(), dpuPantsSize.c_str(), sdTrousersSize.c_str(), jumperSize.c_str(), shoeSize.c_str(), hffkSize.c_str(), puggareeSize.c_str(), bushHatSize.c_str());
+
+					viewSizesPageTexts[0].setString(std::string("LSSD Shirt Size: ") + lssdShirtSize);
+					viewSizesPageTexts[1].setString(std::string("SSSD Shirt Size: ") + sssdShirtSize);
+					viewSizesPageTexts[2].setString(std::string("SD Trousers Size: ") + sdTrousersSize);
+					viewSizesPageTexts[3].setString(std::string("DPU Shirt Size: ") + dpuShirtSize);
+					viewSizesPageTexts[4].setString(std::string("DPU Pants Size: ") + dpuPantsSize);
+					viewSizesPageTexts[5].setString(std::string("Jumper Size: ") + jumperSize);
+					viewSizesPageTexts[6].setString(std::string("HFFK Size: ") + hffkSize);
+					viewSizesPageTexts[7].setString(std::string("Puggaree Size: ") + puggareeSize);
+					viewSizesPageTexts[8].setString(std::string("Bush Hat Size: ") + bushHatSize);
+					viewSizesPageTexts[9].setString(std::string("Shoe Size: ") + shoeSize);
+
+					programState = ProgramState::ViewSizesPage;
 				}
 			}
 		} break;
@@ -721,6 +734,14 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 			textbox.draw(target);
 		}
 	} break;
+
+	case ProgramState::ViewSizesPage:
+	{
+		for (sf::Text& text : viewSizesPageTexts)
+		{
+			target.draw(text);
+		}
+	}
 
 	default:
 	{
@@ -992,6 +1013,15 @@ void CLogButBetter::initGetSizesPage()
 
 #undef CENTER_X
 #undef CENTER_Y
+
+	// NOTE(fkp): Magic number 10 represents number of items
+	for (int i = 0; i < 10; i++)
+	{
+		viewSizesPageTexts.emplace_back("", font, 24);
+		viewSizesPageTexts.back().setFillColor(sf::Color::Black);
+		SET_ORIGIN_CENTER(viewSizesPageTexts.back());
+		viewSizesPageTexts.back().setPosition((float) (WINDOW_WIDTH * 40 / 100), (float) (WINDOW_HEIGHT * 25 / 100) + (WINDOW_HEIGHT * 5 / 100 * i));
+	}
 }
 
 void CLogButBetter::drawCadetDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine)
