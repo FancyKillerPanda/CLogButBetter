@@ -1054,7 +1054,16 @@ void CLogButBetter::drawCadetDatabase(sf::RenderTarget& target, sf::RectangleSha
 	constexpr unsigned int rankWidth = tableWidth * 10 / 100;
 	constexpr unsigned int nameX = rankX + rankWidth + 5;
 	constexpr unsigned int nameWidth = tableWidth * 25 / 100;
-		
+	
+	constexpr unsigned int shirtsX = nameX + nameWidth + 5;
+	constexpr unsigned int shirtsWidth = tableWidth * 10 / 100;
+	constexpr unsigned int pantsX = shirtsX + shirtsWidth + 5;
+	constexpr unsigned int pantsWidth = tableWidth * 10 / 100;
+	constexpr unsigned int shoesX = pantsX + pantsWidth + 5;
+	constexpr unsigned int shoesWidth = tableWidth * 10 / 100;
+	constexpr unsigned int hatsX = shoesX + shoesWidth + 5;
+	constexpr unsigned int hatsWidth = tableWidth * 10 / 100;
+	
 	unsigned int currentY = tableY;
 	sf::Text entryText { "", font, 20 };
 	entryText.setFillColor(sf::Color::Black);
@@ -1071,6 +1080,22 @@ void CLogButBetter::drawCadetDatabase(sf::RenderTarget& target, sf::RectangleSha
 
 	entryText.setString("Name");
 	entryText.setPosition((float) nameX, (float) currentY);
+	target.draw(entryText);
+
+	entryText.setString("Shirts");
+	entryText.setPosition((float) shirtsX, (float) currentY);
+	target.draw(entryText);
+
+	entryText.setString("Pants");
+	entryText.setPosition((float) pantsX, (float) currentY);
+	target.draw(entryText);
+
+	entryText.setString("Shoes");
+	entryText.setPosition((float) shoesX, (float) currentY);
+	target.draw(entryText);
+
+	entryText.setString("Hats");
+	entryText.setPosition((float) hatsX, (float) currentY);
 	target.draw(entryText);
 
 	currentY += entryText.getCharacterSize() + 3;
@@ -1090,6 +1115,54 @@ void CLogButBetter::drawCadetDatabase(sf::RenderTarget& target, sf::RectangleSha
 		entryText.setPosition((float) nameX, (float) currentY);
 		target.draw(entryText);
 
+		unsigned int numberOfShirts = 0;
+		unsigned int numberOfPants = 0;
+		unsigned int numberOfShoes = 0;
+		unsigned int numberOfHats = 0;
+
+		for (ItemGroup& item : cadet.items)
+		{
+			switch (item.type)
+			{
+			case ItemType::SD_LongSleeve:
+			case ItemType::SD_ShortSleeve:
+			case ItemType::DPU_Shirt:
+				numberOfShirts += item.quantity;
+				break;
+				
+			case ItemType::SD_Trousers:
+			case ItemType::DPU_Pants:
+				numberOfPants += item.quantity;
+				break;
+				
+			case ItemType::SD_Shoes:
+			case ItemType::DPU_Boots:
+				numberOfShoes += item.quantity;
+				break;
+				
+			case ItemType::Hat_HFFK:
+			case ItemType::Hat_Bush:
+				numberOfHats += item.quantity;
+				break;
+			}
+		}
+
+		entryText.setString(std::to_string(numberOfShirts));
+		entryText.setPosition((float) shirtsX, (float) currentY);
+		target.draw(entryText);
+
+		entryText.setString(std::to_string(numberOfPants));
+		entryText.setPosition((float) pantsX, (float) currentY);
+		target.draw(entryText);
+
+		entryText.setString(std::to_string(numberOfShoes));
+		entryText.setPosition((float) shoesX, (float) currentY);
+		target.draw(entryText);
+
+		entryText.setString(std::to_string(numberOfHats));
+		entryText.setPosition((float) hatsX, (float) currentY);
+		target.draw(entryText);
+
 		currentY += entryText.getCharacterSize() + 2;
 	}
 
@@ -1098,9 +1171,17 @@ void CLogButBetter::drawCadetDatabase(sf::RenderTarget& target, sf::RectangleSha
 	target.draw(verticalLine);
 	verticalLine.setPosition(nameX - 5, tableY);
 	target.draw(verticalLine);
+	verticalLine.setPosition(shirtsX - 5, tableY);
+	target.draw(verticalLine);
+	verticalLine.setPosition(pantsX - 5, tableY);
+	target.draw(verticalLine);
+	verticalLine.setPosition(shoesX - 5, tableY);
+	target.draw(verticalLine);
+	verticalLine.setPosition(hatsX - 5, tableY);
+	target.draw(verticalLine);
 
 	// NOTE(fkp): +3 skips the header row, +2 for each row after
-	for (int y = tableY + entryText.getCharacterSize() + 3; y < tableY + tableWidth; y += entryText.getCharacterSize() + 2)
+	for (int y = tableY + entryText.getCharacterSize() + 3; y < tableY + tableHeight; y += entryText.getCharacterSize() + 2)
 	{
 		horizontalLine.setPosition(tableX, (float) y);
 		target.draw(horizontalLine);			
@@ -1221,6 +1302,49 @@ void CLogButBetter::drawItemDatabase(sf::RenderTarget& target, sf::RectangleShap
 	READ_STRING_UNTIL_COMMA(nameStr);			\
 	name = std::stoi(nameStr);
 
+std::ostream& operator<<(std::ostream& stream, const ItemGroup& itemGroup)
+{
+	stream << getStringFromItemType(itemGroup.type) << ",";
+	stream << itemGroup.size << ",";
+	stream << itemGroup.subsize << ",";
+	stream << itemGroup.quantity << ",";
+	stream << itemGroup.quantityOnOrder << ",";
+	stream << itemGroup.notes;
+
+	return stream;
+}
+
+ItemGroup readItemFromStream(std::istream& line)
+{
+	ItemGroup result;
+
+	std::string itemType;
+	READ_STRING_UNTIL_COMMA(itemType);
+	result.type = getItemTypeFromString(itemType);
+
+	int itemSize;
+	READ_INT_UNTIL_COMMA(itemSize, itemSizeStr);
+	result.size = itemSize;
+
+	int itemSubsize;
+	READ_INT_UNTIL_COMMA(itemSubsize, itemSubsizeStr);
+	result.subsize = itemSubsize;
+
+	unsigned int itemQuantity;
+	READ_UINT_UNTIL_COMMA(itemQuantity, itemQuantityStr);
+	result.quantity = itemQuantity;
+
+	unsigned int itemQuantityOnOrder;
+	READ_UINT_UNTIL_COMMA(itemQuantityOnOrder, itemQuantityOnOrderStr);
+	result.quantityOnOrder = itemQuantityOnOrder;
+
+	std::string itemNotes;
+	READ_STRING_UNTIL_COMMA(itemNotes);
+	result.notes = itemNotes;
+
+	return result;
+}
+
 // NOTE(fkp): Volatile - must stay in sync with writeCadetsToFile()
 void CLogButBetter::readCadetsFromFile(const std::string& filepath)
 {
@@ -1255,6 +1379,11 @@ void CLogButBetter::readCadetsFromFile(const std::string& filepath)
 		std::string cadetLastName;
 		READ_STRING_UNTIL_COMMA(cadetLastName);
 		cadetDatabase.back().lastName = cadetLastName;
+
+		while (line && line.peek() != EOF)
+		{
+			cadetDatabase.back().items.emplace_back(readItemFromStream(line));
+		}
 	}
 }
 
@@ -1277,6 +1406,11 @@ void CLogButBetter::writeCadetsToFile(const std::string& filepath)
 		file << cadet.firstName << ",";
 		file << cadet.lastName << ",";
 
+		for (ItemGroup& item : cadet.items)
+		{
+			file << item << ",";
+		}
+		
 		file << "\n";
 	}
 }
@@ -1298,31 +1432,7 @@ void CLogButBetter::readItemsFromFile(const std::string& filepath)
 	while (std::getline(file, lineStr))
 	{
 		std::stringstream line { lineStr };
-		itemDatabase.emplace_back();
-		
-		std::string itemType;
-		READ_STRING_UNTIL_COMMA(itemType);
-		itemDatabase.back().type = getItemTypeFromString(itemType);
-
-		int itemSize;
-		READ_INT_UNTIL_COMMA(itemSize, itemSizeStr);
-		itemDatabase.back().size = itemSize;
-
-		int itemSubsize;
-		READ_INT_UNTIL_COMMA(itemSubsize, itemSubsizeStr);
-		itemDatabase.back().subsize = itemSubsize;
-
-		unsigned int itemQuantity;
-		READ_UINT_UNTIL_COMMA(itemQuantity, itemQuantityStr);
-		itemDatabase.back().quantity = itemQuantity;
-
-		unsigned int itemQuantityOnOrder;
-		READ_UINT_UNTIL_COMMA(itemQuantityOnOrder, itemQuantityOnOrderStr);
-		itemDatabase.back().quantityOnOrder = itemQuantityOnOrder;
-
-		std::string itemNotes;
-		READ_STRING_UNTIL_COMMA(itemNotes);
-		itemDatabase.back().notes = itemNotes;
+		itemDatabase.emplace_back(std::move(readItemFromStream(line)));
 	}
 }
 
@@ -1340,13 +1450,7 @@ void CLogButBetter::writeItemsToFile(const std::string& filepath)
 
 	for (ItemGroup& item : itemDatabase)
 	{
-		file << getStringFromItemType(item.type) << ",";
-		file << item.size << ",";
-		file << item.subsize << ",";
-		file << item.quantity << ",";
-		file << item.quantityOnOrder << ",";
-		file << item.notes << ",";
-		
+		file << item << ",";
 		file << "\n";
 	}
 }

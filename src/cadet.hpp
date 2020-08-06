@@ -3,6 +3,8 @@
 #if !defined(CADET_HPP)
 #define CADET_HPP
 
+#include "item.hpp"
+
 /*
  * Holds all the information to uniquely identify a cadet at the squadron.
  *
@@ -15,6 +17,8 @@ struct Cadet
 	std::string rankAbbrev = "";
 	std::string firstName = ""; // Will contain all parts of the name except for the last name
 	std::string lastName = "";
+
+	std::vector<ItemGroup> items;
 };
 
 #endif
