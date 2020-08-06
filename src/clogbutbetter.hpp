@@ -222,5 +222,24 @@ private:
 	std::pair<int, int> parseSizeFromString(ItemType type, const std::string& string);
 };
 
+/*
+ * Rounds a number up to the nearest interval.
+ *
+ * Input: The number to round, the interval to round to.
+ * Output: A rounded number that is a multiple of the interval and
+ * is greater than the original number.
+ */
+inline int roundUp(int number, int interval)
+{
+	if (interval == 0)
+		return number;
+
+	int remainder = number % interval;
+
+	if (remainder == 0)
+		return number;
+
+	return number + interval - remainder;
+}
 
 #endif

@@ -475,6 +475,9 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 					std::string lssdShirtSize = textboxes[NECK_SIZE_INDEX].getText() + "/" + textboxes[SLEEVE_SIZE_INDEX].getText();
 					std::string sssdShirtSize = textboxes[NECK_SIZE_INDEX].getText();
 
+					std::string dpuShirtSize = textboxes[CHEST_SIZE_INDEX].getText();
+					std::string dpuPantsSize = textboxes[WAIST_SIZE_INDEX].getText();
+					
 					// TODO(fkp): Proper SD Trousers subsize (S, R, L)
 					std::string sdTrousersSize = std::to_string(roundUp(std::stoi(textboxes[WAIST_SIZE_INDEX].getText()), 5)) + "R";
 
@@ -525,6 +528,10 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 					{
 						bushHatSize = "Small";
 					}
+
+					printf("LSSD: %s, SSSD: %s, DPUS: %s, DPUP: %s\n"
+						   "SDT: %s, Jump: %s, Shoe: %s, HFFK: %s\n"
+						   "Pug: %s, Bush: %s", lssdShirtSize.c_str(), sssdShirtSize.c_str(), dpuShirtSize.c_str(), dpuPantsSize.c_str(), sdTrousersSize.c_str(), jumperSize.c_str(), shoeSize.c_str(), hffkSize.c_str(), puggareeSize.c_str(), bushHatSize.c_str());
 				}
 			}
 		} break;
@@ -566,6 +573,14 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			sizeTextbox->handleTextInput(event);
 			quantityTextbox->handleTextInput(event);
 			quantityOrderedTextbox->handleTextInput(event);
+		} break;
+
+		case ProgramState::GetSizesPage:
+		{
+			for (TextBox& textbox : getSizesPageTextboxes)
+			{
+				textbox.handleTextInput(event);
+			}
 		} break;
 		}
 	} break;
