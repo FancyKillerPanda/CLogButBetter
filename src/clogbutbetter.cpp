@@ -255,6 +255,8 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			{
 				if (homePageButtons[i].handleMouseUp())
 				{
+					lastProgramState = ProgramState::HomePage;
+					
 					switch (i)
 					{
 					case VIEW_CADETS_BUTTON:
@@ -310,6 +312,8 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 				
 				if (button.handleMouseUp())
 				{
+					lastProgramState = ProgramState::ManagePage;
+					
 					switch (i)
 					{
 					case ADD_ITEM_BUTTON:
@@ -364,6 +368,7 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 				if (password == "415sqn")
 				{
 					hasLoggedIn = true;
+					lastProgramState = ProgramState::HomePage;
 					programState = ProgramState::ManagePage;
 				}
 				else
@@ -387,6 +392,9 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 
 				cadetRestoreFilepathTextbox->reset();
 				itemRestoreFilepathTextbox->reset();
+
+				programState = lastProgramState;
+				lastProgramState = ProgramState::HomePage;
 			}
 		} break;
 
@@ -409,7 +417,8 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 				cadetRestoreFilepathTextbox->reset();
 				itemRestoreFilepathTextbox->reset();
 				
-				programState = ProgramState::ManagePage;
+				programState = lastProgramState;
+				lastProgramState = ProgramState::HomePage;
 			}
 		} break;
 
@@ -611,6 +620,7 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 					viewSizesPageTexts[9].setString(std::string("Shoe Size: ") + shoeSize);
 
 					programState = ProgramState::ViewSizesPage;
+					lastProgramState = ProgramState::ManagePage;
 				}
 			}
 		} break;
@@ -632,7 +642,8 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 		{
 			if (backButton->handleMouseUp())
 			{
-				programState = ProgramState::HomePage;
+				programState = lastProgramState;
+				lastProgramState = ProgramState::HomePage;
 			}
 		}
 	} break;

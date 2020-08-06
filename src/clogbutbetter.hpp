@@ -107,6 +107,7 @@ class CLogButBetter
 {
 private:
 	ProgramState programState = ProgramState::HomePage;
+	ProgramState lastProgramState = ProgramState::HomePage;
 
 	sf::Font font;
 
