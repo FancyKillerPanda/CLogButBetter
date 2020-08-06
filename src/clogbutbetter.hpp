@@ -81,6 +81,8 @@ enum class ProgramState
 	LoginPage,
 	AddItemPage,
 	RemoveItemPage,
+	AddCadetPage,
+	RemoveCadetPage,
 	CreateBackupPage,
 	RestoreBackupPage,
 	GetSizesPage,
@@ -125,8 +127,8 @@ private:
 	Button* loginButton = nullptr;
 
 	// Add/remove item pages
-	Button* addButton = nullptr;
-	Button* removeButton = nullptr;
+	Button* addItemButton = nullptr;
+	Button* removeItemButton = nullptr;
 	DropDownMenu* typeSelectionMenu = nullptr;
 	sf::Text sizeText;
 	TextBox* sizeTextbox = nullptr;
@@ -134,6 +136,16 @@ private:
 	TextBox* quantityTextbox = nullptr;
 	sf::Text quantityOrderedText;
 	TextBox* quantityOrderedTextbox = nullptr;
+
+	// Add/remove cadet pages
+	Button* addCadetButton = nullptr;
+	Button* removeCadetButton = nullptr;
+	sf::Text serviceNumberText;
+	TextBox* serviceNumberTextbox = nullptr;
+	sf::Text rankText;
+	TextBox* rankTextbox = nullptr;
+	sf::Text nameText;
+	TextBox* nameTextbox = nullptr;
 
 	// Create/restore backup pages
 	Button* createBackupButton = nullptr;
@@ -197,6 +209,7 @@ private:
 	void initManagePage();
 	void initLoginPage();
 	void initAddRemoveItemPages();
+	void initAddRemoveCadetPages();
 	void initBackupPages();
 	void initGetSizesPage();
 

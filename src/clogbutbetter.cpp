@@ -42,6 +42,7 @@ CLogButBetter::CLogButBetter()
 	initManagePage();
 	initLoginPage();
 	initAddRemoveItemPages();
+	initAddRemoveCadetPages();
 	initBackupPages();
 	initGetSizesPage();
 
@@ -98,13 +99,23 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 		case ProgramState::AddItemPage:
 		{
 			typeSelectionMenu->handleMouseMove(mousePos);
-			addButton->handleMouseMove(mousePos);
+			addItemButton->handleMouseMove(mousePos);
 		} break;
 
 		case ProgramState::RemoveItemPage:
 		{
 			typeSelectionMenu->handleMouseMove(mousePos);
-			removeButton->handleMouseMove(mousePos);
+			removeItemButton->handleMouseMove(mousePos);
+		} break;
+
+		case ProgramState::AddCadetPage:
+		{
+			addCadetButton->handleMouseMove(mousePos);
+		} break;
+
+		case ProgramState::RemoveCadetPage:
+		{
+			removeCadetButton->handleMouseMove(mousePos);
 		} break;
 
 		case ProgramState::CreateBackupPage:
@@ -163,13 +174,23 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 		case ProgramState::AddItemPage:
 		{
 			typeSelectionMenu->handleMouseDown(mousePos);
-			addButton->handleMouseDown(mousePos);
+			addItemButton->handleMouseDown(mousePos);
 		} break;
 
 		case ProgramState::RemoveItemPage:
 		{
 			typeSelectionMenu->handleMouseDown(mousePos);
-			removeButton->handleMouseDown(mousePos);
+			removeItemButton->handleMouseDown(mousePos);
+		} break;
+		
+		case ProgramState::AddCadetPage:
+		{
+			addCadetButton->handleMouseDown(mousePos);
+		} break;
+
+		case ProgramState::RemoveCadetPage:
+		{
+			removeCadetButton->handleMouseDown(mousePos);
 		} break;
 		
 		case ProgramState::CreateBackupPage:
@@ -297,6 +318,16 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 						programState = ProgramState::RemoveItemPage;
 					} break;
 
+					case ADD_CADET_BUTTON:
+					{
+						programState = ProgramState::AddCadetPage;
+					} break;
+
+					case REMOVE_CADET_BUTTON:
+					{
+						programState = ProgramState::RemoveCadetPage;
+					} break;
+
 					case CREATE_BACKUP_BUTTON:
 					{
 						programState = ProgramState::CreateBackupPage;
@@ -379,8 +410,8 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 		{
 			typeSelectionMenu->handleMouseUp();
 
-			if ((programState == ProgramState::AddItemPage && addButton->handleMouseUp()) ||
-				(programState == ProgramState::RemoveItemPage && removeButton->handleMouseUp()))
+			if ((programState == ProgramState::AddItemPage && addItemButton->handleMouseUp()) ||
+				(programState == ProgramState::RemoveItemPage && removeItemButton->handleMouseUp()))
 			{
 				if (typeSelectionMenu->getSelectedEntry() != -1 &&
 					sizeTextbox->getText() != "" &&
@@ -464,6 +495,16 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			sizeTextbox->handleMouseUp(mousePos);
 			quantityTextbox->handleMouseUp(mousePos);
 			quantityOrderedTextbox->handleMouseUp(mousePos);
+		} break;
+
+		case ProgramState::AddCadetPage:
+		case ProgramState::RemoveCadetPage:
+		{
+			// TODO(fkp): Add the cadet
+			
+			serviceNumberTextbox->handleMouseUp(mousePos);
+			rankTextbox->handleMouseUp(mousePos);
+			nameTextbox->handleMouseUp(mousePos);
 		} break;
 
 		case ProgramState::GetSizesPage:
@@ -609,6 +650,14 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			quantityOrderedTextbox->handleTextInput(event);
 		} break;
 
+		case ProgramState::AddCadetPage:
+		case ProgramState::RemoveCadetPage:
+		{
+			serviceNumberTextbox->handleTextInput(event);
+			rankTextbox->handleTextInput(event);
+			nameTextbox->handleTextInput(event);
+		} break;
+
 		case ProgramState::GetSizesPage:
 		{
 			for (TextBox& textbox : getSizesPageTextboxes)
@@ -705,11 +754,11 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 	{
 		if (programState == ProgramState::AddItemPage)
 		{
-			addButton->draw(target);
+			addItemButton->draw(target);
 		}
 		else if (programState == ProgramState::RemoveItemPage)
 		{
-			removeButton->draw(target);
+			removeItemButton->draw(target);
 		}
 		
 		typeSelectionMenu->draw(target);
@@ -721,6 +770,27 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 		sizeTextbox->draw(target);
 		quantityTextbox->draw(target);
 		quantityOrderedTextbox->draw(target);
+	} break;
+	
+	case ProgramState::AddCadetPage:
+	case ProgramState::RemoveCadetPage:
+	{
+		if (programState == ProgramState::AddCadetPage)
+		{
+			addCadetButton->draw(target);
+		}
+		else if (programState == ProgramState::RemoveCadetPage)
+		{
+			removeCadetButton->draw(target);
+		}
+		
+		target.draw(serviceNumberText);
+		target.draw(rankText);
+		target.draw(nameText);
+		
+		serviceNumberTextbox->draw(target);
+		rankTextbox->draw(target);
+		nameTextbox->draw(target);
 	} break;
 
 	case ProgramState::CreateBackupPage:
@@ -865,11 +935,11 @@ void CLogButBetter::initLoginPage()
 
 void CLogButBetter::initAddRemoveItemPages()
 {
-	addButton = new Button(font, "Add",
+	addItemButton = new Button(font, "Add",
 						   sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 60 / 100 },
 						   sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 10 / 100 });
 	
-	removeButton = new Button(font, "Remove",
+	removeItemButton = new Button(font, "Remove",
 							  sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 60 / 100 },
 							  sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 10 / 100 });
 	
@@ -913,6 +983,46 @@ void CLogButBetter::initAddRemoveItemPages()
 										 sf::Vector2i { WINDOW_WIDTH * 80 / 100, WINDOW_HEIGHT * 20 / 100 },
 										sf::Vector2i { WINDOW_WIDTH * 10 / 100, WINDOW_HEIGHT * 5 / 100 });
 	quantityOrderedTextbox->setNumbersOnly(true);
+}
+
+void CLogButBetter::initAddRemoveCadetPages()
+{
+	addCadetButton = new Button(font, "Add",
+								sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 60 / 100 },
+								sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 10 / 100 });
+	
+	removeCadetButton = new Button(font, "Remove",
+								   sf::Vector2i { WINDOW_WIDTH * 50 / 100, WINDOW_HEIGHT * 60 / 100 },
+								   sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 10 / 100 });
+		
+	serviceNumberText = sf::Text { "Service Number:", font, 24 };
+	serviceNumberText.setFillColor(sf::Color::Black);
+	serviceNumberText.setPosition((WINDOW_WIDTH * 20 / 100) - (serviceNumberText.getGlobalBounds().width / 2),
+								  (WINDOW_HEIGHT * 25 / 100) - (serviceNumberText.getGlobalBounds().height / 2));
+	
+	rankText = sf::Text { "Rank:", font, 24 };
+	rankText.setFillColor(sf::Color::Black);
+	rankText.setPosition((WINDOW_WIDTH * 40 / 100) - (rankText.getGlobalBounds().width / 2),
+						 (WINDOW_HEIGHT * 25 / 100) - (rankText.getGlobalBounds().height / 2));
+	
+	nameText = sf::Text { "Name:", font, 24 };
+	nameText.setFillColor(sf::Color::Black);
+	nameText.setPosition((WINDOW_WIDTH * 70 / 100) - (nameText.getGlobalBounds().width / 2),
+						 (WINDOW_HEIGHT * 25 / 100) - (nameText.getGlobalBounds().height / 2));
+	
+	serviceNumberTextbox = new TextBox(font,
+									   sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 35 / 100 },
+									   sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 5 / 100 });
+	serviceNumberTextbox->setNumbersOnly(true);
+	serviceNumberTextbox->setActive(true);
+	
+	rankTextbox = new TextBox(font,
+							  sf::Vector2i { WINDOW_WIDTH * 40 / 100, WINDOW_HEIGHT * 35 / 100 },
+							  sf::Vector2i { WINDOW_WIDTH * 10 / 100, WINDOW_HEIGHT * 5 / 100 });
+	
+	nameTextbox = new TextBox(font,
+							  sf::Vector2i { WINDOW_WIDTH * 70 / 100, WINDOW_HEIGHT * 35 / 100 },
+							  sf::Vector2i { WINDOW_WIDTH * 35 / 100, WINDOW_HEIGHT * 5 / 100 });
 }
 
 void CLogButBetter::initBackupPages()
