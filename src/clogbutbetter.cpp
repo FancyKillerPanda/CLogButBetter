@@ -49,6 +49,10 @@ CLogButBetter::CLogButBetter()
 	backButton = new Button(font, "<--",
 							sf::Vector2i { WINDOW_WIDTH * 5 / 100, WINDOW_HEIGHT * 5 / 100},
 							sf::Vector2i { WINDOW_WIDTH * 5 / 100, WINDOW_HEIGHT * 3 / 100});
+
+	searchTextbox = new TextBox(font,
+								sf::Vector2i { WINDOW_WIDTH * 85 / 100, WINDOW_HEIGHT * 18 / 100 },
+								sf::Vector2i { WINDOW_WIDTH * 18 / 100, WINDOW_HEIGHT * 5 / 100 });
 }
 
 CLogButBetter::~CLogButBetter()
@@ -611,6 +615,14 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			}
 		} break;
 
+		case ProgramState::ViewDatabasePage:
+		{
+			if (cadetDatabaseIsActive)
+			{
+				searchTextbox->handleMouseUp(mousePos);
+			}
+		} break;
+		
 		default:
 		{
 		} break;
@@ -665,6 +677,14 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 				textbox.handleTextInput(event);
 			}
 		} break;
+
+		case ProgramState::ViewDatabasePage:
+		{
+			if (cadetDatabaseIsActive)
+			{
+				searchTextbox->handleTextInput(event);
+			}
+		} break;
 		}
 	} break;
 	
@@ -694,8 +714,8 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 	{
 		target.draw(titleText);
 		
-		sf::RectangleShape background { sf::Vector2f { WINDOW_WIDTH * 90 / 100, WINDOW_HEIGHT * 75 / 100 } };
-		background.setPosition(WINDOW_WIDTH * 5 / 100, WINDOW_HEIGHT * 20 / 100);
+		sf::RectangleShape background { sf::Vector2f { tableWidth, tableHeight } };
+		background.setPosition(tableX, tableY);
 		background.setFillColor(sf::Color::White);
 		target.draw(background);
 
@@ -1296,6 +1316,9 @@ void CLogButBetter::drawCadetDatabase(sf::RenderTarget& target, sf::RectangleSha
 		horizontalLine.setPosition(tableX, (float) y);
 		target.draw(horizontalLine);			
 	}
+
+	// Draws the search box
+	searchTextbox->draw(target);
 }
 
 void CLogButBetter::drawItemDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine)
@@ -1392,7 +1415,7 @@ void CLogButBetter::drawItemDatabase(sf::RenderTarget& target, sf::RectangleShap
 	target.draw(verticalLine);
 
 	// NOTE(fkp): +3 skips the header row, +2 for each row after
-	for (int y = tableY + entryText.getCharacterSize() + 3; y < tableY + tableWidth; y += entryText.getCharacterSize() + 2)
+	for (int y = tableY + entryText.getCharacterSize() + 3; y < tableY + tableHeight; y += entryText.getCharacterSize() + 2)
 	{
 		horizontalLine.setPosition(tableX, (float) y);
 		target.draw(horizontalLine);			

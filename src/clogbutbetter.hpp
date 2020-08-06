@@ -168,6 +168,9 @@ private:
 	std::string itemDatabaseFilepath = "res/items.csv";
 	std::vector<ItemGroup> itemDatabase;
 
+	// Search bar
+	TextBox* searchTextbox = nullptr;
+
 	// Used to skip the login page when debugging.
 #ifdef NDEBUG
 	bool hasLoggedIn = false;
