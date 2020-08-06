@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include <assert.h>
+#include <functional>
 
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
@@ -184,6 +185,26 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 		case ProgramState::GetSizesPage:
 		{
 			calculateSizesButton->handleMouseDown(mousePos);
+		} break;
+
+		case ProgramState::ViewDatabasePage:
+		{
+			if (mousePos.x >= typeX && mousePos.x <= typeX + typeWidth)
+			{
+				sortItemsDatabase(ItemField::Type);
+			}
+			else if (mousePos.x >= sizeX && mousePos.x <= sizeX + sizeWidth)
+			{
+				sortItemsDatabase(ItemField::Size);
+			}
+			else if (mousePos.x >= quantityX && mousePos.x <= quantityX + quantityWidth)
+			{
+				sortItemsDatabase(ItemField::Quantity);
+			}
+			else if (mousePos.x >= quantityOnOrderX && mousePos.x <= quantityOnOrderX + quantityOnOrderWidth)
+			{
+				sortItemsDatabase(ItemField::QuantityOnOrder);
+			}
 		} break;
 
 		default:
@@ -1088,18 +1109,6 @@ void CLogButBetter::drawCadetDatabase(sf::RenderTarget& target, sf::RectangleSha
 
 void CLogButBetter::drawItemDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine)
 {
-	// NOTE(fkp): The +5 is just to add some padding
-	constexpr unsigned int typeX = tableX + 5;
-	constexpr unsigned int typeWidth = tableWidth * 20 / 100;
-	constexpr unsigned int sizeX = typeX + typeWidth + 5;
-	constexpr unsigned int sizeWidth = tableWidth * 10 / 100;
-	constexpr unsigned int quantityX = sizeX + sizeWidth + 5;
-	constexpr unsigned int quantityWidth = tableWidth * 15 / 100;
-	constexpr unsigned int quantityOnOrderX = quantityX + quantityWidth + 5;
-	constexpr unsigned int quantityOnOrderWidth = tableWidth * 15 / 100;
-	constexpr unsigned int notesX = quantityOnOrderX + quantityOnOrderWidth + 5;
-	constexpr unsigned int notesWidth = tableWidth * 35 / 100;
-
 	unsigned int currentY = tableY;
 	sf::Text entryText { "", font, 20 };
 	entryText.setFillColor(sf::Color::Black);
@@ -1416,3 +1425,39 @@ std::pair<int, int> CLogButBetter::parseSizeFromString(ItemType type, const std:
 	assert(false);
 	return std::make_pair(-1, -1);
 }
+
+void CLogButBetter::sortItemsDatabase(ItemField field)
+{
+	std::function<bool(ItemGroup, ItemGroup)> sortFunction;
+	
+	switch (field)
+	{
+	case ItemField::Type:
+	{
+		sortFunction = [](ItemGroup first, ItemGroup second) { return (int) first.type < (int) second.type; };
+	} break;
+
+	case ItemField::Size:
+	{
+		sortFunction = [](ItemGroup first, ItemGroup second) { return first.size < (int) second.size; };
+	} break;
+
+	case ItemField::Quantity:
+	{
+		sortFunction = [](ItemGroup first, ItemGroup second) { return first.quantity < second.quantity; };
+	} break;
+
+	case ItemField::QuantityOnOrder:
+	{
+		sortFunction = [](ItemGroup first, ItemGroup second) { return first.quantityOnOrder < second.quantityOnOrder; };
+	} break;
+
+	default:
+	{
+		assert(false);
+	} break;
+	}
+
+	std::sort(itemDatabase.begin(), itemDatabase.end(), sortFunction);
+}
+

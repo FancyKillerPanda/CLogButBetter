@@ -41,7 +41,9 @@ enum class ItemType
  * currently in the group, as well as the number of items that have
  * been ordered. There is a field for notes about this item group.
  */
-struct ItemGroup { ItemType type;
+struct ItemGroup
+{
+	ItemType type;
 	
 	int size;
 	int subsize = -1;

@@ -88,6 +88,17 @@ enum class ProgramState
 };
 
 /*
+ * The field to sort the items database by.
+ */
+enum class ItemField
+{
+	Type,
+	Size,
+	Quantity,
+	QuantityOnOrder,
+};
+
+/*
  * The main class of the project, this connects everything together.
  */
 class CLogButBetter
@@ -222,6 +233,13 @@ private:
 	 * second representing the subsize (if it exists, else -1).
 	 */
 	std::pair<int, int> parseSizeFromString(ItemType type, const std::string& string);
+
+	/*
+	 * Sorts the items database by a field.
+	 *
+	 * Input: The field to sort by.
+	 */
+	void sortItemsDatabase(ItemField field);
 };
 
 /*

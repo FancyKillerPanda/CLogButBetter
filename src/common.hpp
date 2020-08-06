@@ -32,4 +32,16 @@ constexpr unsigned int tableY = WINDOW_HEIGHT * 20 / 100;
 constexpr unsigned int tableWidth = WINDOW_WIDTH * 90 / 100;
 constexpr unsigned int tableHeight = WINDOW_HEIGHT * 75 / 100;
 
+// NOTE(fkp): The +5 is just to add some padding
+constexpr unsigned int typeX = tableX + 5;
+constexpr unsigned int typeWidth = tableWidth * 20 / 100;
+constexpr unsigned int sizeX = typeX + typeWidth + 5;
+constexpr unsigned int sizeWidth = tableWidth * 10 / 100;
+constexpr unsigned int quantityX = sizeX + sizeWidth + 5;
+constexpr unsigned int quantityWidth = tableWidth * 15 / 100;
+constexpr unsigned int quantityOnOrderX = quantityX + quantityWidth + 5;
+constexpr unsigned int quantityOnOrderWidth = tableWidth * 15 / 100;
+constexpr unsigned int notesX = quantityOnOrderX + quantityOnOrderWidth + 5;
+constexpr unsigned int notesWidth = tableWidth * 35 / 100;
+
 #endif
