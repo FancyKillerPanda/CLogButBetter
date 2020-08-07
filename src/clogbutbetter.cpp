@@ -351,7 +351,82 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 
 			if (issueButton->handleMouseUp())
 			{
-				// TODO(fkp): Issue
+				if ((handlingServiceNumberTextbox->getText() != "" ||
+					 handlingNameTextbox->getText() != "") &&
+					handlingSizeInTextbox->getText() != "" &&
+					handlingQuantityInTextbox->getText() != "" &&
+					handlingTypeMenu->getSelectedEntry() != -1)
+				{
+					Cadet* cadetInQuestion = nullptr;
+
+					if (handlingServiceNumberTextbox->getText() != "")
+					{
+						for (Cadet& cadet : cadetDatabase)
+						{
+							if ((int) cadet.serviceNumber == std::stoi(handlingServiceNumberTextbox->getText()))
+							{
+								cadetInQuestion = &cadet;
+								break;
+							}
+						}
+					}
+					else if (handlingNameTextbox->getText() != "")
+					{
+						for (Cadet& cadet : cadetDatabase)
+						{
+							if (cadet.firstName + " " + cadet.lastName == handlingNameTextbox->getText())
+							{
+								cadetInQuestion = &cadet;
+								break;
+							}
+						}						
+					}
+					else
+					{
+						assert(false);
+					}
+
+					if (cadetInQuestion == nullptr)
+					{
+						MessageBox(nullptr, "Cadet name/service number is incorrect.", nullptr, MB_OK);
+						break;
+					}
+
+					ItemType type = getItemTypeFromString(handlingTypeMenu->getSelectedButton()->getText());
+					auto [size, subsize] = parseSizeFromString(type, handlingSizeInTextbox->getText());
+					int quantity = std::stoi(handlingQuantityInTextbox->getText());
+					bool found = false;
+
+					for (ItemGroup& item : cadetInQuestion->items)
+					{
+						if (item.type == type && item.size == size && item.subsize == subsize)
+						{
+							found = true;
+							item.quantity += quantity;
+							break;
+						}
+					}
+
+					if (!found)
+					{
+						cadetInQuestion->items.emplace_back();
+						cadetInQuestion->items.back().type = type;
+						cadetInQuestion->items.back().quantity = quantity;
+						cadetInQuestion->items.back().size = size;
+						cadetInQuestion->items.back().subsize = subsize;
+					}
+
+					handlingTypeMenu->reset();
+					handlingServiceNumberTextbox->reset();
+					handlingNameTextbox->reset();
+					handlingSizeInTextbox->reset();
+					handlingQuantityInTextbox->reset();
+					cadetDatabaseShown = cadetDatabase;
+				}
+				else
+				{
+					MessageBox(nullptr, "Please fill all details.", nullptr, MB_OK);
+				}
 			}
 		} break;
 
@@ -381,7 +456,88 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 
 			if (returnButton->handleMouseUp())
 			{
-				// TODO(fkp): Return
+				if ((handlingServiceNumberTextbox->getText() != "" ||
+					 handlingNameTextbox->getText() != "") &&
+					handlingSizeInTextbox->getText() != "" &&
+					handlingQuantityInTextbox->getText() != "" &&
+					handlingTypeMenu->getSelectedEntry() != -1)
+				{
+					Cadet* cadetInQuestion = nullptr;
+
+					if (handlingServiceNumberTextbox->getText() != "")
+					{
+						for (Cadet& cadet : cadetDatabase)
+						{
+							if ((int) cadet.serviceNumber == std::stoi(handlingServiceNumberTextbox->getText()))
+							{
+								cadetInQuestion = &cadet;
+								break;
+							}
+						}
+					}
+					else if (handlingNameTextbox->getText() != "")
+					{
+						for (Cadet& cadet : cadetDatabase)
+						{
+							if (cadet.firstName + " " + cadet.lastName == handlingNameTextbox->getText())
+							{
+								cadetInQuestion = &cadet;
+								break;
+							}
+						}						
+					}
+					else
+					{
+						assert(false);
+					}
+
+					if (cadetInQuestion == nullptr)
+					{
+						MessageBox(nullptr, "Cadet name/service number is incorrect.", nullptr, MB_OK);
+						break;
+					}
+
+					ItemType type = getItemTypeFromString(handlingTypeMenu->getSelectedButton()->getText());
+					auto [size, subsize] = parseSizeFromString(type, handlingSizeInTextbox->getText());
+					int quantity = std::stoi(handlingQuantityInTextbox->getText());
+					bool found = false;
+
+					for (ItemGroup& item : cadetInQuestion->items)
+					{
+						if (item.type == type && item.size == size && item.subsize == subsize)
+						{
+							found = true;
+
+							if (quantity > (int) item.quantity)
+							{
+								item.quantity = 0;
+							}
+							else
+							{
+								item.quantity -= quantity;
+							}
+							
+							break;
+						}
+					}
+
+					if (!found)
+					{
+						MessageBox(nullptr, "Cadet does not have item.", nullptr, MB_OK);
+						break;
+					}
+
+					handlingTypeMenu->reset();
+					handlingServiceNumberTextbox->reset();
+					handlingNameTextbox->reset();
+					handlingSizeInTextbox->reset();
+					handlingQuantityInTextbox->reset();
+					cadetDatabaseShown = cadetDatabase;
+				}
+				else
+				{
+					MessageBox(nullptr, "Please fill all details.", nullptr, MB_OK);
+				}
 			}
 		} break;
 
