@@ -45,6 +45,7 @@ CLogButBetter::CLogButBetter()
 	initAddRemoveCadetPages();
 	initBackupPages();
 	initGetSizesPage();
+	initUniformHandlingPages();
 
 	backButton = new Button(font, "<--",
 							sf::Vector2i { WINDOW_WIDTH * 5 / 100, WINDOW_HEIGHT * 5 / 100},
@@ -85,6 +86,24 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			{
 				button.handleMouseMove(mousePos);
 			}
+		} break;
+
+		case ProgramState::IssuesPage:
+		{
+			issueButton->handleMouseMove(mousePos);
+			handlingTypeMenu->handleMouseMove(mousePos);
+		} break;
+		
+		case ProgramState::ExchangesPage:
+		{
+			exchangeButton->handleMouseMove(mousePos);
+			handlingTypeMenu->handleMouseMove(mousePos);
+		} break;
+		
+		case ProgramState::ReturnsPage:
+		{
+			returnButton->handleMouseMove(mousePos);
+			handlingTypeMenu->handleMouseMove(mousePos);
 		} break;
 		
 		case ProgramState::ManagePage:
@@ -160,6 +179,24 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			{
 				button.handleMouseDown(mousePos);
 			}
+		} break;
+
+		case ProgramState::IssuesPage:
+		{
+			issueButton->handleMouseDown(mousePos);
+			handlingTypeMenu->handleMouseDown(mousePos);
+		} break;
+				
+		case ProgramState::ExchangesPage:
+		{
+			exchangeButton->handleMouseDown(mousePos);
+			handlingTypeMenu->handleMouseDown(mousePos);
+		} break;
+				
+		case ProgramState::ReturnsPage:
+		{
+			returnButton->handleMouseDown(mousePos);
+			handlingTypeMenu->handleMouseDown(mousePos);
 		} break;
 				
 		case ProgramState::ManagePage:
@@ -301,6 +338,50 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 
 					homePageButtons[i].setActive(false);
 				}
+			}
+		} break;
+
+		case ProgramState::IssuesPage:
+		{
+			handlingTypeMenu->handleMouseUp();
+			handlingServiceNumberTextbox->handleMouseUp(mousePos);
+			handlingNameTextbox->handleMouseUp(mousePos);
+			handlingSizeInTextbox->handleMouseUp(mousePos);
+			handlingQuantityInTextbox->handleMouseUp(mousePos);
+
+			if (issueButton->handleMouseUp())
+			{
+				// TODO(fkp): Issue
+			}
+		} break;
+
+		case ProgramState::ExchangesPage:
+		{
+			handlingTypeMenu->handleMouseUp();
+			handlingServiceNumberTextbox->handleMouseUp(mousePos);
+			handlingNameTextbox->handleMouseUp(mousePos);
+			handlingSizeInTextbox->handleMouseUp(mousePos);
+			handlingQuantityInTextbox->handleMouseUp(mousePos);
+			handlingSizeOutTextbox->handleMouseUp(mousePos);
+			handlingQuantityOutTextbox->handleMouseUp(mousePos);
+
+			if (exchangeButton->handleMouseUp())
+			{
+				// TODO(fkp): Exchange
+			}
+		} break;
+
+		case ProgramState::ReturnsPage:
+		{
+			handlingTypeMenu->handleMouseUp();
+			handlingServiceNumberTextbox->handleMouseUp(mousePos);
+			handlingNameTextbox->handleMouseUp(mousePos);
+			handlingSizeInTextbox->handleMouseUp(mousePos);
+			handlingQuantityInTextbox->handleMouseUp(mousePos);
+
+			if (returnButton->handleMouseUp())
+			{
+				// TODO(fkp): Return
 			}
 		} break;
 
@@ -742,6 +823,32 @@ void CLogButBetter::handleProgramEvent(sf::RenderWindow& window, sf::Event& even
 			passwordTextbox->handleTextInput(event);
 		} break;
 
+		case ProgramState::IssuesPage:
+		{
+			handlingServiceNumberTextbox->handleTextInput(event);
+			handlingNameTextbox->handleTextInput(event);
+			handlingSizeInTextbox->handleTextInput(event);
+			handlingQuantityInTextbox->handleTextInput(event);
+		} break;
+
+		case ProgramState::ExchangesPage:
+		{
+			handlingServiceNumberTextbox->handleTextInput(event);
+			handlingNameTextbox->handleTextInput(event);
+			handlingSizeInTextbox->handleTextInput(event);
+			handlingQuantityInTextbox->handleTextInput(event);
+			handlingSizeOutTextbox->handleTextInput(event);
+			handlingQuantityOutTextbox->handleTextInput(event);
+		} break;
+
+		case ProgramState::ReturnsPage:
+		{
+			handlingServiceNumberTextbox->handleTextInput(event);
+			handlingNameTextbox->handleTextInput(event);
+			handlingSizeInTextbox->handleTextInput(event);
+			handlingQuantityInTextbox->handleTextInput(event);
+		} break;
+
 		case ProgramState::CreateBackupPage:
 		case ProgramState::RestoreBackupPage:
 		{
@@ -843,16 +950,53 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 	case ProgramState::IssuesPage:
 	{
 		target.draw(titleText);
+		issueButton->draw(target);
+		
+		target.draw(handlingServiceNumberText);
+		handlingServiceNumberTextbox->draw(target);
+		target.draw(handlingNameText);
+		handlingNameTextbox->draw(target);
+		target.draw(handlingSizeText);
+		handlingSizeInTextbox->draw(target);
+		target.draw(handlingQuantityText);
+		handlingQuantityInTextbox->draw(target);
+		handlingTypeMenu->draw(target);
 	} break;
 
 	case ProgramState::ExchangesPage:
 	{
 		target.draw(titleText);
+		exchangeButton->draw(target);
+
+		target.draw(handlingServiceNumberText);
+		handlingServiceNumberTextbox->draw(target);
+		target.draw(handlingNameText);
+		handlingNameTextbox->draw(target);
+		target.draw(handlingSizeInText);
+		handlingSizeInTextbox->draw(target);
+		target.draw(handlingQuantityInText);
+		handlingQuantityInTextbox->draw(target);
+		target.draw(handlingSizeOutText);
+		handlingSizeOutTextbox->draw(target);
+		target.draw(handlingQuantityOutText);
+		handlingQuantityOutTextbox->draw(target);
+		handlingTypeMenu->draw(target);
 	} break;
 
 	case ProgramState::ReturnsPage:
 	{
 		target.draw(titleText);
+		returnButton->draw(target);
+
+		target.draw(handlingServiceNumberText);
+		handlingServiceNumberTextbox->draw(target);
+		target.draw(handlingNameText);
+		handlingNameTextbox->draw(target);
+		target.draw(handlingSizeText);
+		handlingSizeInTextbox->draw(target);
+		target.draw(handlingQuantityText);
+		handlingQuantityInTextbox->draw(target);
+		handlingTypeMenu->draw(target);
 	} break;
 
 	case ProgramState::ManagePage:
@@ -958,7 +1102,7 @@ void CLogButBetter::drawProgram(sf::RenderTarget& target)
 		{
 			target.draw(text);
 		}
-	}
+	} break;
 
 	default:
 	{
@@ -1279,6 +1423,98 @@ void CLogButBetter::initGetSizesPage()
 		SET_ORIGIN_CENTER(viewSizesPageTexts.back());
 		viewSizesPageTexts.back().setPosition((float) (WINDOW_WIDTH * 40 / 100), (float) (WINDOW_HEIGHT * 25 / 100) + (WINDOW_HEIGHT * 5 / 100 * i));
 	}
+}
+
+void CLogButBetter::initUniformHandlingPages()
+{
+	handlingServiceNumberText = sf::Text { "Service #:", font, 24 };
+	handlingServiceNumberText.setFillColor(sf::Color::Black);
+	SET_ORIGIN_CENTER(handlingServiceNumberText);
+	handlingServiceNumberText.setPosition(WINDOW_WIDTH * 10 / 100, WINDOW_HEIGHT * 35 / 100);
+
+	handlingServiceNumberTextbox = new TextBox(font,
+											   sf::Vector2i { WINDOW_WIDTH * 10 / 100, WINDOW_HEIGHT * 40 / 100 },
+											   sf::Vector2i { WINDOW_WIDTH * 13 / 100, WINDOW_HEIGHT * 5 / 100 });
+	handlingServiceNumberTextbox->setNumbersOnly(true);
+	
+	handlingNameText = sf::Text { "Name:", font, 24 };
+	handlingNameText.setFillColor(sf::Color::Black);
+	SET_ORIGIN_CENTER(handlingNameText);
+	handlingNameText.setPosition(WINDOW_WIDTH * 30 / 100, WINDOW_HEIGHT * 35 / 100);
+	
+	handlingNameTextbox = new TextBox(font,
+									  sf::Vector2i { WINDOW_WIDTH * 30 / 100, WINDOW_HEIGHT * 40 / 100 },
+									  sf::Vector2i { WINDOW_WIDTH * 25 / 100, WINDOW_HEIGHT * 5 / 100 });
+	
+	handlingTypeMenu = new DropDownMenu(font, "Type?", { "LSSD Shirt", "SSSD Shirt",
+													  "SD Trousers", "SD Jumper",
+													  "SD Belt", "SD Shoes",
+													  "DPU Shirt", "DPU Pants",
+													  "DPU Jumper", "DPU Boots",
+													  "HFFK", "Hat Badge",
+													  "Puggaree", "Bush Hat",
+													  "Rank Slides", "Webbing",
+													  "Japara" },
+		sf::Vector2i { WINDOW_WIDTH * 57 / 100, WINDOW_HEIGHT * 20 / 100 });
+	
+	handlingSizeText = sf::Text { "Size:", font, 24 };
+	handlingSizeText.setFillColor(sf::Color::Black);
+	SET_ORIGIN_CENTER(handlingSizeText);
+	handlingSizeText.setPosition(WINDOW_WIDTH * 75 / 100, WINDOW_HEIGHT * 35 / 100);
+	
+	handlingQuantityText = sf::Text { "Quantity:", font, 24 };
+	handlingQuantityText.setFillColor(sf::Color::Black);
+	SET_ORIGIN_CENTER(handlingQuantityText);
+	handlingQuantityText.setPosition(WINDOW_WIDTH * 90 / 100, WINDOW_HEIGHT * 35 / 100);
+	
+	handlingSizeInText = sf::Text { "Size In:", font, 24 };
+	handlingSizeInText.setFillColor(sf::Color::Black);
+	SET_ORIGIN_CENTER(handlingSizeInText);
+	handlingSizeInText.setPosition(WINDOW_WIDTH * 75 / 100, WINDOW_HEIGHT * 35 / 100);
+	
+	handlingSizeInTextbox = new TextBox(font,
+								   sf::Vector2i { WINDOW_WIDTH * 75 / 100, WINDOW_HEIGHT * 40 / 100 },
+								   sf::Vector2i { WINDOW_WIDTH * 10 / 100, WINDOW_HEIGHT * 5 / 100 });
+
+	handlingQuantityInText = sf::Text { "Quantity In:", font, 24 };
+	handlingQuantityInText.setFillColor(sf::Color::Black);
+	SET_ORIGIN_CENTER(handlingQuantityInText);
+	handlingQuantityInText.setPosition(WINDOW_WIDTH * 90 / 100, WINDOW_HEIGHT * 35 / 100);
+	
+	handlingQuantityInTextbox = new TextBox(font,
+								   sf::Vector2i { WINDOW_WIDTH * 90 / 100, WINDOW_HEIGHT * 40 / 100 },
+								   sf::Vector2i { WINDOW_WIDTH * 10 / 100, WINDOW_HEIGHT * 5 / 100 });
+	handlingQuantityInTextbox->setNumbersOnly(true);
+
+	handlingSizeOutText = sf::Text { "Size Out:", font, 24 };
+	handlingSizeOutText.setFillColor(sf::Color::Black);
+	SET_ORIGIN_CENTER(handlingSizeOutText);
+	handlingSizeOutText.setPosition(WINDOW_WIDTH * 75 / 100, WINDOW_HEIGHT * 50 / 100);
+	
+	handlingSizeOutTextbox = new TextBox(font,
+								   sf::Vector2i { WINDOW_WIDTH * 75 / 100, WINDOW_HEIGHT * 55 / 100 },
+								   sf::Vector2i { WINDOW_WIDTH * 10 / 100, WINDOW_HEIGHT * 5 / 100 });
+
+	handlingQuantityOutText = sf::Text { "Quantity Out:", font, 24 };
+	handlingQuantityOutText.setFillColor(sf::Color::Black);
+	SET_ORIGIN_CENTER(handlingQuantityOutText);
+	handlingQuantityOutText.setPosition(WINDOW_WIDTH * 90 / 100, WINDOW_HEIGHT * 50 / 100);
+	
+	handlingQuantityOutTextbox = new TextBox(font,
+								   sf::Vector2i { WINDOW_WIDTH * 90 / 100, WINDOW_HEIGHT * 55 / 100 },
+								   sf::Vector2i { WINDOW_WIDTH * 10 / 100, WINDOW_HEIGHT * 5 / 100 });
+	handlingQuantityOutTextbox->setNumbersOnly(true);
+
+	issueButton = new Button(font, "Issue",
+							 sf::Vector2i { WINDOW_WIDTH * 35 / 100, WINDOW_HEIGHT * 75 / 100 },
+							 sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 10 / 100 });
+	
+	exchangeButton = new Button(font, "Exchange",
+							 sf::Vector2i { WINDOW_WIDTH * 35 / 100, WINDOW_HEIGHT * 75 / 100 },
+							 sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 10 / 100 });
+	returnButton = new Button(font, "Return",
+							 sf::Vector2i { WINDOW_WIDTH * 35 / 100, WINDOW_HEIGHT * 75 / 100 },
+							 sf::Vector2i { WINDOW_WIDTH * 20 / 100, WINDOW_HEIGHT * 10 / 100 });
 }
 
 void CLogButBetter::drawCadetDatabase(sf::RenderTarget& target, sf::RectangleShape& horizontalLine, sf::RectangleShape& verticalLine)

@@ -162,6 +162,26 @@ private:
 	std::vector<TextBox> getSizesPageTextboxes;
 	std::vector<sf::Text> viewSizesPageTexts;
 
+	// Uniform handling pages
+	sf::Text handlingServiceNumberText;
+	TextBox* handlingServiceNumberTextbox = nullptr;
+	sf::Text handlingNameText;
+	TextBox* handlingNameTextbox = nullptr;	
+	DropDownMenu* handlingTypeMenu = nullptr;
+	sf::Text handlingSizeText;
+	sf::Text handlingQuantityText;
+	sf::Text handlingSizeInText;
+	TextBox* handlingSizeInTextbox = nullptr;
+	sf::Text handlingQuantityInText;
+	TextBox* handlingQuantityInTextbox = nullptr;
+	sf::Text handlingSizeOutText;
+	TextBox* handlingSizeOutTextbox = nullptr;
+	sf::Text handlingQuantityOutText;
+	TextBox* handlingQuantityOutTextbox = nullptr;
+	Button* issueButton = nullptr;
+	Button* exchangeButton = nullptr;
+	Button* returnButton = nullptr;
+
 	// The databases holding all cadet and item information
 	bool cadetDatabaseIsActive = true;
 	std::string cadetDatabaseFilepath = "res/cadets.csv";
@@ -217,6 +237,7 @@ private:
 	void initAddRemoveCadetPages();
 	void initBackupPages();
 	void initGetSizesPage();
+	void initUniformHandlingPages();
 
 	/*
 	 * Draws the database view for cadets and items.
